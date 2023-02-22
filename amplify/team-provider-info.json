@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-polp3-dev-91820-authRole",
+      "UnauthRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/amplify-polp3-dev-91820-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/amplify-polp3-dev-91820-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-polp3-dev-91820-deployment",
+      "UnauthRoleName": "amplify-polp3-dev-91820-unauthRole",
+      "StackName": "amplify-polp3-dev-91820",
+      "StackId": "arn:aws:cloudformation:us-east-2:YOUR_AWS_ACCOUNT_ID:stack/amplify-polp3-dev-91820/250ee260-b2c4-11ed-b28b-0614d13e7d26",
+      "AmplifyAppId": "didj7t2s2amh3"
+    },
+    "categories": {
+      "auth": {
+        "polp324ac576d": {}
+      }
+    }
+  }
+}

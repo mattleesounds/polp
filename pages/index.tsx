@@ -1,15 +1,22 @@
-import Head from 'next/head'
-import { Inter } from '@next/font/google'
-import NavBar from '@/components/NavBar'
-import PageTitle from '@/components/PageTitle'
-import Feed from '@/components/Feed'
-import ControlBar from '@/components/ControlBar'
-import { createRef, useState } from 'react'
-import Track from '@/components/Track'
-import { TrackType } from '@/lib/types'
-import Media from '@/components/Media'
+import Head from "next/head";
+import { Inter } from "@next/font/google";
+import NavBar from "@/components/NavBar";
+import PageTitle from "@/components/PageTitle";
+import Media from "@/components/Media";
+import {
+  useAuthenticator,
+  withAuthenticator,
+  Button,
+  Flex,
+  Heading,
+} from "@aws-amplify/ui-react";
+import { Amplify } from "aws-amplify";
+import "@aws-amplify/ui-react/styles.css";
+import awsExports from "../src/aws-exports";
 
-const inter = Inter({ subsets: ['latin'] })
+Amplify.configure(awsExports);
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   /* Tracks */
@@ -18,7 +25,7 @@ export default function Home() {
 
   const tracks:TrackType[] = [track1, track2] */
 
-
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
 
   return (
     <>
@@ -28,11 +35,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
-      <main className="bg-cream h-screen">
+      <main className="h-screen bg-cream">
         <NavBar />
         <PageTitle />
         <Media />
       </main>
     </>
-  )
+  );
 }
