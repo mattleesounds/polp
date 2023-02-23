@@ -19,7 +19,7 @@ const NavBar = () => {
         <div className="w-half absolute top-1/2 left-1/2 z-20 h-full -translate-x-1/2 -translate-y-1/2 transform items-center">
           <input
             className="w-full translate-y-5 bg-cream"
-            placeholder="search..."
+            placeholder="App coming soon...!"
           />
         </div>
 

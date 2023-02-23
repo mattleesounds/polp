@@ -3,15 +3,6 @@ import { Inter } from "@next/font/google";
 import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
 import Media from "@/components/Media";
-import {
-  useAuthenticator,
-  withAuthenticator,
-  Button,
-  Flex,
-  Heading,
-} from "@aws-amplify/ui-react";
-import { Amplify } from "aws-amplify";
-import "@aws-amplify/ui-react/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +12,6 @@ export default function Home() {
   const track2:TrackType = {id: 2, name: "song2", source: "/song2.mp3"}
 
   const tracks:TrackType[] = [track1, track2] */
-
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
 
   return (
     <>

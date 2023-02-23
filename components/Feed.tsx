@@ -1,38 +1,25 @@
-import React from 'react'
-import Track from './Track'
-import { TrackType } from '@/lib/types'
+import React from "react";
+import Link from "next/link";
 
-interface FeedProps {
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  tracks: TrackType[];
-  currentTrack: string | null;
-  setCurrentTrack: React.Dispatch<React.SetStateAction<any>>; 
-  isPlaying: boolean;
-  handlePlayPause: (trackSource: string) => void;
-  audioRefs: React.MutableRefObject<Map<string, HTMLAudioElement>>;
-  durRefs: React.MutableRefObject<Map<string, number>>;
-}
+interface FeedProps {}
 
-const Feed = ({ isPlaying, setIsPlaying, handlePlayPause, tracks, currentTrack, setCurrentTrack, audioRefs, durRefs }: FeedProps): JSX.Element =>  {
-  
-
+const Feed = (): JSX.Element => {
   return (
-    <div className="flex flex-col place-items-center mb-2 bg-cream h-full z-0 m-2 pb-24">
-      {tracks.map(track => (
-        <Track
-          key={track.title}
-          track={track}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          currentTrack={currentTrack}
-          setCurrentTrack={setCurrentTrack}
-          handlePlayPause={handlePlayPause}
-          audioRefs={audioRefs}
-          durRefs={durRefs}
-        />
-      ))}
+    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-cream pb-24">
+      <a
+        href="https://bsb2oht0phj.typeform.com/to/E2joby1U"
+        className="m-24 flex h-[75px] w-48 content-center items-center justify-center bg-slate-400 text-center text-2xl text-white hover:bg-slate-500"
+      >
+        signup for the waitlist
+      </a>
+      <a
+        href="https://bsb2oht0phj.typeform.com/to/E2joby1U"
+        className="m-6 flex h-[75px] w-48 content-center items-center justify-center bg-slate-400 text-center text-2xl text-white hover:bg-slate-500"
+      >
+        apply for artist account
+      </a>
     </div>
-  )
-}
+  );
+};
 
-export default Feed
+export default Feed;
