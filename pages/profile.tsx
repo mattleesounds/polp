@@ -8,7 +8,7 @@ import UserInfo3 from "@/components/UserInfo3";
 
 const profile = () => {
   return (
-    <div className="h-screen bg-cream">
+    <div className="h-full bg-cream">
       <NavBar />
       {/* <div className="h-4 bg-cream"></div> */}
       <div className="m-auto flex justify-center">
