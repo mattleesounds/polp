@@ -24,7 +24,7 @@ const NavBar = () => {
         </div>
 
         {/* Menu */}
-        <div className="m-0 grid h-full w-[90px] grid-cols-2">
+        <div className="m-0 grid h-full w-[90px] grid-cols-2 md:mr-16">
           <button className="m-2">
             <AiOutlineMenu size={20} />
           </button>

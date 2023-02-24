@@ -44,16 +44,7 @@ const Media = (): JSX.Element => {
 
   return (
     <div>
-      <Feed
-        tracks={tracks}
-        setIsPlaying={setIsPlaying}
-        isPlaying={isPlaying}
-        currentTrack={currentTrack}
-        setCurrentTrack={setCurrentTrack}
-        handlePlayPause={handlePlayPause}
-        audioRefs={audioRefs}
-        durRefs={durRefs}
-      />
+      <Feed />
       <ControlBar
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
