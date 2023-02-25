@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import NavBar from "@/components/NavBar";
+import ControlBar from "@/components/ControlBar";
 
 const cmt = () => {
   return (
@@ -26,12 +27,15 @@ const cmt = () => {
             layout="fixed"
             className="m-auto"
           ></Image>
-          <p className="m-2 text-center">
-            Matt Lee is dope as fuck in every way. Just swaggin out crazy.
+          <p className="m-4 text-center lg:ml-48 lg:mr-48">
+            Matt is a software developer and POLP co-founder. He has several
+            years of experience as a sound engineer and a degree in Music
+            Business. He is endlessly passionate about music technology and
+            music-based communities.
           </p>
         </div>
         <div className="mt-12">
-          <h1 className="m-2 text-center text-3xl">Matt Lee</h1>
+          <h1 className="m-2 text-center text-3xl">Theo Melder</h1>
           <Image
             src="/TheoPfp.jpeg"
             alt="Matt Lee"
@@ -40,8 +44,8 @@ const cmt = () => {
             layout="fixed"
             className="m-auto"
           ></Image>
-          <p className="m-2 text-center">
-            Matt Lee is dope as fuck in every way. Just swaggin out crazy.
+          <p className="m-4 text-center lg:ml-48 lg:mr-48">
+            Theo is a fan of manga, music, and wearing jackets in warm weather.
           </p>
         </div>
       </div>
