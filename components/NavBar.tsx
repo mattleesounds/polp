@@ -31,12 +31,12 @@ const NavBar = () => {
         </div>
 
         {/* Menu */}
-        <div className="m-0 grid h-full w-[90px] grid-cols-2 md:mr-16">
-          <button className="m-2" onClick={toggleMenu}>
+        <div className="m-0 flex h-full w-[120px] border border-black ">
+          <button className="m-2 mr-4" onClick={toggleMenu}>
             <AiOutlineMenu size={20} />
           </button>
           {isOpen && (
-            <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg">
+            <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg md:w-[235px]">
               <ul>
                 <Link href="/">
                   <li className="p-2 hover:bg-cream">feed</li>
