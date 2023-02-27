@@ -13,7 +13,7 @@ const NavBar = () => {
   }
 
   return (
-    <div className="fixed top-0 z-10 h-16 w-full bg-white">
+    <div className="fixed top-0 z-10 h-16 w-full bg-white font-merriweather">
       <div className="m-auto flex h-full max-w-[1240px] items-center justify-between">
         {/* logo */}
         <div className="relative m-2 h-[32px] w-[90px]">

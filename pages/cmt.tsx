@@ -5,7 +5,7 @@ import ControlBar from "@/components/ControlBar";
 
 const cmt = () => {
   return (
-    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-cream pb-24">
+    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-cream pb-24 font-merriweather">
       <NavBar />
       <h1 className="m-2 mt-16 text-center text-3xl text-polp-orange">
         community management tool <br />

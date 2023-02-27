@@ -11,7 +11,10 @@ module.exports = {
       colors: {
         'cream': '#F8F3EB',
         'polp-orange': '#FFAC33'
-      }
+      },
+      fontFamily: {
+        merriweather: ['Merriweather', 'serif'],
+      },
     },
   },
   plugins: [],

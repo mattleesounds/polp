@@ -5,7 +5,7 @@ interface FeedProps {}
 
 const Feed = (): JSX.Element => {
   return (
-    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-cream pb-24">
+    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-cream pb-24 font-merriweather">
       <div className="h-48 text-center">
         <h1 className="m-2 text-3xl text-polp-orange">
           music streaming for <br />

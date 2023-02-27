@@ -6,11 +6,19 @@ import ControlBar from "./ControlBar";
 
 const Media = (): JSX.Element => {
   /* Tracks */
-  const tracks: TrackType[] = [];
+  const tracks: TrackType[] = [
+    {
+      title: "Never Gonna Give You Up",
+      artist: "Rick Astley",
+      source: "rickroll.mp3",
+    },
+  ];
 
   /* States */
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTrack, setCurrentTrack] = useState<string | null>(null);
+  const [currentTrack, setCurrentTrack] = useState<string | null>(
+    "rickroll.mp3"
+  );
 
   /* Map of audioRefs */
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
@@ -18,6 +26,7 @@ const Media = (): JSX.Element => {
 
   /* Play/Pause Function */
   const handlePlayPause = (trackSource: string) => {
+    console.log("handlePlayPause: ", trackSource);
     if (currentTrack === trackSource) {
       const audioElement = audioRefs.current.get(trackSource);
       if (audioElement) {
@@ -55,6 +64,7 @@ const Media = (): JSX.Element => {
         handlePlayPause={handlePlayPause}
         tracks={tracks}
       />
+      {/* <audio ref={audioRefs[]} src={track.source} /> */}
     </div>
   );
 };
