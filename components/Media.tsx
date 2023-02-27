@@ -3,8 +3,19 @@ import { TrackType } from "@/lib/types";
 import { useState, useRef } from "react";
 import Feed from "./Feed";
 import ControlBar from "./ControlBar";
+import Profile from "./Profile";
 
-const Media = (): JSX.Element => {
+interface mediaProps {
+  feedIsHidden: boolean;
+  profileIsHidden: boolean;
+  cmtIsHidden: boolean;
+}
+
+const Media = ({
+  feedIsHidden,
+  profileIsHidden,
+  cmtIsHidden,
+}: mediaProps): JSX.Element => {
   /* Tracks */
   const tracks: TrackType[] = [
     {
@@ -23,6 +34,7 @@ const Media = (): JSX.Element => {
   /* Map of audioRefs */
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
   const durRefs = useRef<Map<string, number>>(new Map());
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   /* Play/Pause Function */
   const handlePlayPause = (trackSource: string) => {
@@ -53,7 +65,12 @@ const Media = (): JSX.Element => {
 
   return (
     <div>
-      <Feed />
+      <div className="">
+        <Feed />
+      </div>
+      <div className="hidden">
+        <Profile />
+      </div>
       <ControlBar
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}

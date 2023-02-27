@@ -47,6 +47,21 @@ const ControlBar = ({
   const [progressMinSec, setProgressMinSec] = useState("");
   const [durationMinSec, setDurationMinSec] = useState("");
 
+  /* States */
+  const [duration, setDuration] = useState(0);
+
+  /* Ref */
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  /* Set audioRef in Map */
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRefs.current.set(tracks[0].source, audioRef.current);
+      setDuration(audioRef.current.duration);
+      durRefs.current.set(tracks[0].source, duration);
+    }
+  }, [audioRefs, tracks, durRefs, duration]);
+
   // Progress Bar Hook
   useEffect(() => {
     if (!currentTrack) return;
@@ -207,20 +222,22 @@ const ControlBar = ({
   
    */
   return (
-    <div className="fixed leading-none p-0 bottom-0 bg-white h-16 w-full m-0">
-      <div className="flex justify-center m-0 p-0">
+    <div className="fixed bottom-0 m-0 h-16 w-full bg-white p-0 leading-none">
+      <div className="m-0 flex justify-center p-0">
         {/* Now Playing */}
         <div className="absolute left-1">
           <div className="flex flex-col">
-            <h2 className="text-lg pl-2">
+            <h2 className="pl-2 text-lg">
               {currentTrack ? track!.artist : ""}
             </h2>
             <h3 className="pl-2">{currentTrack ? track!.title : ""}</h3>
           </div>
         </div>
 
+        <audio ref={audioRef} src={tracks[0].source} />
+
         {/* Controls */}
-        <div className="relative max-w-1/2 m-0 p-0 top-0 bg-white">
+        <div className="max-w-1/2 relative top-0 m-0 bg-white p-0">
           <button
             className="relative"
             onClick={() => handlePrevious(currentTrack!)}
@@ -230,7 +247,7 @@ const ControlBar = ({
 
           <button
             onClick={() => handlePlayPause(currentTrack!)}
-            className="focus:outline-none relative top-0"
+            className="relative top-0 focus:outline-none"
           >
             {isPlaying ? (
               <BiPause size={50} className="mt-[3px]" />
@@ -257,7 +274,7 @@ const ControlBar = ({
 
       {/* Progress Bar */}
       <div
-        className="absolute w-[90%] left-[5%] h-[6px] bottom-2 bg-cream cursor-pointer"
+        className="absolute left-[5%] bottom-2 h-[6px] w-[90%] cursor-pointer bg-cream"
         onMouseDown={handleMouseDown}
       >
         <div

@@ -3,6 +3,8 @@ import { Inter } from "@next/font/google";
 import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
 import Media from "@/components/Media";
+import Feed from "@/components/Feed";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,6 +14,28 @@ export default function Home() {
   const track2:TrackType = {id: 2, name: "song2", source: "/song2.mp3"}
 
   const tracks:TrackType[] = [track1, track2] */
+
+  const [feedIsHidden, setFeedIsHidden] = useState<boolean>(false);
+  const [profileIsHidden, setProfileIsHidden] = useState<boolean>(true);
+  const [cmtIsHidden, setCmtIsHidden] = useState<boolean>(true);
+
+  const handleFeed = () => {
+    setFeedIsHidden(false);
+    setProfileIsHidden(true);
+    setCmtIsHidden(true);
+  };
+
+  const handProfile = () => {
+    setFeedIsHidden(true);
+    setProfileIsHidden(false);
+    setCmtIsHidden(true);
+  };
+
+  const handleCmt = () => {
+    setFeedIsHidden(true);
+    setProfileIsHidden(true);
+    setCmtIsHidden(false);
+  };
 
   return (
     <>
@@ -24,7 +48,14 @@ export default function Home() {
       <main className="h-screen bg-cream">
         <NavBar />
         <PageTitle />
-        <Media />
+        {/* <div className="">
+          <Feed />
+        </div> */}
+        <Media
+          feedIsHidden={feedIsHidden}
+          profileIsHidden={profileIsHidden}
+          cmtIsHidden={cmtIsHidden}
+        />
       </main>
     </>
   );

@@ -5,8 +5,10 @@ import GeneralInfo from "@/components/GeneralInfo";
 import UserInfo1 from "@/components/UserInfo1";
 import UserInfo2 from "@/components/UserInfo2";
 import UserInfo3 from "@/components/UserInfo3";
+import ControlBar from "@/components/ControlBar";
+import Media from "@/components/Media";
 
-const profile = () => {
+const Profile = () => {
   return (
     <div className="h-full bg-cream">
       <NavBar />
@@ -33,4 +35,4 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default Profile;
