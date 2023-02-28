@@ -223,68 +223,70 @@ const ControlBar = ({
    */
   return (
     <div className="fixed bottom-0 m-0 h-16 w-full bg-white p-0 leading-none">
-      <div className="m-0 flex justify-center p-0">
-        {/* Now Playing */}
-        <div className="absolute left-1">
-          <div className="flex flex-col">
-            <h2 className="pl-2 text-lg">
-              {currentTrack ? track!.artist : ""}
-            </h2>
-            <h3 className="pl-2">{currentTrack ? track!.title : ""}</h3>
+      <div className="m-auto h-full max-w-[1240px] items-center justify-between">
+        <div className="m-0 flex justify-center p-0">
+          {/* Now Playing */}
+          <div className="absolute left-1 lg:left-[7%]">
+            <div className="flex flex-col">
+              <h2 className="pl-2 text-lg">
+                {currentTrack ? track!.artist : ""}
+              </h2>
+              <h3 className="pl-2">{currentTrack ? track!.title : ""}</h3>
+            </div>
+          </div>
+
+          <audio ref={audioRef} src={tracks[0].source} />
+
+          {/* Controls */}
+          <div className="max-w-1/2 relative top-0 m-0 bg-white p-0">
+            <button
+              className="relative"
+              onClick={() => handlePrevious(currentTrack!)}
+            >
+              <BiSkipPrevious size={50} />
+            </button>
+
+            <button
+              onClick={() => handlePlayPause(currentTrack!)}
+              className="relative top-0 focus:outline-none"
+            >
+              {isPlaying ? (
+                <BiPause size={50} className="mt-[3px]" />
+              ) : (
+                <BiPlay size={50} className="mt-[3px]" />
+              )}
+            </button>
+
+            <button
+              className="relative top-0"
+              onClick={() => handleNext(currentTrack!)}
+            >
+              <BiSkipNext size={50} />
+            </button>
+          </div>
+          {/*  <div className="absolute max-w-1/2 m-0 p-0 bg-white top-0">
+        </div> */}
+
+          {/* progress */}
+          <div className="absolute right-5 top-[15px] lg:right-[13%]">
+            {progressMinSec} / {durationMinSec}
           </div>
         </div>
 
-        <audio ref={audioRef} src={tracks[0].source} />
-
-        {/* Controls */}
-        <div className="max-w-1/2 relative top-0 m-0 bg-white p-0">
-          <button
-            className="relative"
-            onClick={() => handlePrevious(currentTrack!)}
-          >
-            <BiSkipPrevious size={50} />
-          </button>
-
-          <button
-            onClick={() => handlePlayPause(currentTrack!)}
-            className="relative top-0 focus:outline-none"
-          >
-            {isPlaying ? (
-              <BiPause size={50} className="mt-[3px]" />
-            ) : (
-              <BiPlay size={50} className="mt-[3px]" />
-            )}
-          </button>
-
-          <button
-            className="relative top-0"
-            onClick={() => handleNext(currentTrack!)}
-          >
-            <BiSkipNext size={50} />
-          </button>
-        </div>
-        {/*  <div className="absolute max-w-1/2 m-0 p-0 bg-white top-0">
-        </div> */}
-
-        {/* progress */}
-        <div className="absolute right-5 top-[15px]">
-          {progressMinSec} / {durationMinSec}
-        </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div
-        className="absolute left-[5%] bottom-2 h-[6px] w-[90%] cursor-pointer bg-cream"
-        onMouseDown={handleMouseDown}
-      >
+        {/* Progress Bar */}
         <div
-          className="h-full bg-black"
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
+          className="absolute left-[5%] bottom-2 h-[6px] w-[90%] cursor-pointer bg-cream"
+          onMouseDown={handleMouseDown}
+        >
+          <div
+            className="h-full bg-black"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
 
-      {/* Knob */}
-      {/* <div ref={knobRef} className="" onMouseDown={handleKnobMouseDown}></div> */}
+        {/* Knob */}
+        {/* <div ref={knobRef} className="" onMouseDown={handleKnobMouseDown}></div> */}
+      </div>
     </div>
   );
 };

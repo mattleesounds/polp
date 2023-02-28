@@ -2,7 +2,7 @@ import React from "react";
 
 const UserInfo = () => {
   return (
-    <div className="relative m-4 h-auto w-[92%] bg-white p-4 font-merriweather">
+    <div className="relative m-4 h-auto w-[92%] bg-white p-4">
       <h1 className=" text-xl font-bold">Bio</h1>
       <p>
         POLP was founded in 2022 with the goal of giving musicians and music

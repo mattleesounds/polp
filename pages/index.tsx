@@ -25,7 +25,7 @@ export default function Home() {
     setCmtIsHidden(true);
   };
 
-  const handProfile = () => {
+  const handleProfile = () => {
     setFeedIsHidden(true);
     setProfileIsHidden(false);
     setCmtIsHidden(true);
@@ -46,15 +46,19 @@ export default function Home() {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
       <main className="h-screen bg-cream">
-        <NavBar />
+        {/* <NavBar
+          handleFeed={handleFeed}
+          handleProfile={handleProfile}
+          handleCmt={handleCmt}
+        /> */}
         <PageTitle />
         {/* <div className="">
           <Feed />
         </div> */}
         <Media
-          feedIsHidden={feedIsHidden}
+        /* feedIsHidden={feedIsHidden}
           profileIsHidden={profileIsHidden}
-          cmtIsHidden={cmtIsHidden}
+          cmtIsHidden={cmtIsHidden} */
         />
       </main>
     </>

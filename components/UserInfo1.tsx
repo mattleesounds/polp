@@ -2,7 +2,7 @@ import React from "react";
 
 const UserInfo = () => {
   return (
-    <div className="relative m-4 h-auto w-[92%] bg-white p-4 font-merriweather">
+    <div className="relative m-4 h-auto w-[92%] bg-white p-4 ">
       <div>
         <h1 className="text-xl font-bold">Wallet</h1>
         <p>listenership.eth</p>

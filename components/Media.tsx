@@ -4,18 +4,14 @@ import { useState, useRef } from "react";
 import Feed from "./Feed";
 import ControlBar from "./ControlBar";
 import Profile from "./Profile";
+import Cmt from "./Cmt";
+import NavBar from "./NavBar";
+import { Link, LinkProps, scroller, Element } from "react-scroll";
+import Image from "next/image";
+import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
+import { MdAccountCircle } from "react-icons/md";
 
-interface mediaProps {
-  feedIsHidden: boolean;
-  profileIsHidden: boolean;
-  cmtIsHidden: boolean;
-}
-
-const Media = ({
-  feedIsHidden,
-  profileIsHidden,
-  cmtIsHidden,
-}: mediaProps): JSX.Element => {
+const Media = (): JSX.Element => {
   /* Tracks */
   const tracks: TrackType[] = [
     {
@@ -63,14 +59,87 @@ const Media = ({
     }
   };
 
+  const handleProfile = () => {
+    scroller.scrollTo("profile", {
+      smooth: true,
+    });
+  };
+
+  const handleFeed = () => {
+    scroller.scrollTo("feed", {
+      smooth: true,
+    });
+  };
+
+  const handleCmt = () => {
+    scroller.scrollTo("cmt", {
+      smooth: true,
+    });
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  function toggleMenu() {
+    setIsOpen(!isOpen);
+  }
+
   return (
     <div>
-      <div className="">
-        <Feed />
+      {/* NavBar */}
+      <div className="fixed top-0 z-10 h-16 w-full bg-white">
+        <div className="m-auto flex h-full max-w-[1240px] items-center justify-between">
+          {/* logo */}
+          <div className="relative m-2 h-[32px] w-[90px]">
+            <Link to="feed" className="m-0">
+              <Image src="/logo.png" alt="POLP Logo" fill />
+            </Link>
+          </div>
+
+          {/* search bar */}
+          <div className="w-half absolute top-1/2 left-1/2 z-20 h-full -translate-x-1/2 -translate-y-1/2 transform items-center md:w-[50%]">
+            <input
+              className="w-full translate-y-5 bg-cream p-1"
+              placeholder="App coming soon...!"
+            />
+          </div>
+
+          {/* Menu */}
+          <div className="m-0 flex h-full w-[110px] ">
+            <button className="m-2 mr-4" onClick={toggleMenu}>
+              <AiOutlineMenu size={20} />
+            </button>
+            {isOpen && (
+              <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg md:w-[235px]">
+                <ul>
+                  <Link to="feed" className="w-full">
+                    <li className="p-2 hover:bg-cream">feed</li>
+                  </Link>
+                  <Link to="profile" className="w-full">
+                    <li className="p-2 hover:bg-cream">profile</li>
+                  </Link>
+                  <Link to="cmt">
+                    <li className="p-2 hover:bg-cream">community</li>
+                  </Link>
+                </ul>
+              </div>
+            )}
+            <Link to="profile" className="mt-4">
+              <MdAccountCircle size={30} />
+            </Link>
+          </div>
+        </div>
       </div>
-      <div className="hidden">
+      <Element name="feed">
+        <div className="h-16"></div>
+      </Element>
+      <Feed />
+      <div className="h-2 bg-[#FDFDFD]"></div>
+      <Element name="profile">
         <Profile />
-      </div>
+      </Element>
+      <Element name="cmt">
+        <Cmt />
+      </Element>
       <ControlBar
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}

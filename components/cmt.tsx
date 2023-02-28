@@ -3,11 +3,10 @@ import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import ControlBar from "@/components/ControlBar";
 
-const cmt = () => {
+const Cmt = () => {
   return (
-    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-cream pb-24 font-merriweather">
-      <NavBar />
-      <h1 className="m-2 mt-16 text-center text-3xl text-polp-orange">
+    <div className="z-0 m-2 mb-2 flex h-full w-full flex-col place-items-center bg-cream pb-24">
+      <h1 className="m-2 mt-16 text-center font-merriweather text-3xl text-polp-orange">
         community management tool <br />
         coming soon!
       </h1>
@@ -27,7 +26,7 @@ const cmt = () => {
             layout="fixed"
             className="m-auto"
           ></Image>
-          <p className="m-4 text-center lg:ml-48 lg:mr-48">
+          <p className="max-w-48 m-4 text-center lg:ml-48 lg:mr-48">
             Matt is a software developer and POLP co-founder. He has several
             years of experience as a sound engineer and a degree in Music
             Business. He is endlessly passionate about music technology and
@@ -53,4 +52,4 @@ const cmt = () => {
   );
 };
 
-export default cmt;
+export default Cmt;
