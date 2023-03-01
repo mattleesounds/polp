@@ -9,7 +9,7 @@ import ControlBar from "@/components/ControlBar";
 
 const Profile = () => {
   return (
-    <div className="flex h-full bg-cream ">
+    <div className="flex h-full bg-cream">
       {/* <div className="h-4 bg-cream"></div> */}
       <div className="max-w-48 m-auto flex justify-center pb-12">
         <div className="m-0 w-[90%] max-w-[1240px]">

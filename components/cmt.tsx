@@ -5,8 +5,8 @@ import ControlBar from "@/components/ControlBar";
 
 const Cmt = () => {
   return (
-    <div className="z-0 m-2 mb-2 flex h-full w-full flex-col place-items-center bg-cream pb-24">
-      <h1 className="m-2 mt-16 text-center font-merriweather text-3xl text-polp-orange">
+    <div className="mt-2 mb-2 flex h-full w-[100%] flex-col place-items-center bg-cream pb-24">
+      <h1 className="m-2 mb-0 mt-4 text-center font-merriweather text-3xl text-polp-orange">
         community management tool <br />
         coming soon!
       </h1>
@@ -14,8 +14,8 @@ const Cmt = () => {
         For now, let<span>&#39;</span>s introduce the{" "}
         <span className="text-polp-orange">POLP</span> team...
       </p>
-      <div className="h-12"></div>
-      <div className="ali m-4 flex-col items-center">
+      <div className="h-4"></div>
+      <div className="ali m-4  mt-0 flex-col items-center">
         <div>
           <h1 className="m-2 text-center text-3xl">Matt Lee</h1>
           <Image

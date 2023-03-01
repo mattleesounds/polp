@@ -10,6 +10,7 @@ import { Link, LinkProps, scroller, Element } from "react-scroll";
 import Image from "next/image";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
+import Footer from "./Footer";
 
 const Media = (): JSX.Element => {
   /* Tracks */
@@ -62,6 +63,7 @@ const Media = (): JSX.Element => {
   const handleProfile = () => {
     scroller.scrollTo("profile", {
       smooth: true,
+      offset: -60,
     });
   };
 
@@ -111,14 +113,25 @@ const Media = (): JSX.Element => {
             {isOpen && (
               <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg md:w-[235px]">
                 <ul>
-                  <Link to="feed" className="w-full">
-                    <li className="p-2 hover:bg-cream">feed</li>
+                  <Link to="feed" className="w-full" offset={-60} smooth="true">
+                    <button onClick={toggleMenu} className="w-full text-left">
+                      <li className="p-2 hover:bg-cream">feed</li>
+                    </button>
                   </Link>
-                  <Link to="profile" className="w-full">
-                    <li className="p-2 hover:bg-cream">profile</li>
+                  <Link
+                    to="profile"
+                    className="w-full "
+                    offset={-60}
+                    smooth="true"
+                  >
+                    <button onClick={toggleMenu} className="w-full text-left">
+                      <li className="p-2 hover:bg-cream">profile</li>
+                    </button>
                   </Link>
-                  <Link to="cmt">
-                    <li className="p-2 hover:bg-cream">community</li>
+                  <Link to="cmt" offset={-60} smooth="true">
+                    <button onClick={toggleMenu} className="w-full text-left">
+                      <li className="p-2 hover:bg-cream">community</li>
+                    </button>
                   </Link>
                 </ul>
               </div>
@@ -130,9 +143,9 @@ const Media = (): JSX.Element => {
         </div>
       </div>
       <Element name="feed">
-        <div className="h-16"></div>
+        <div className="h-4"></div>
       </Element>
-      <Feed />
+      <Feed handleProfile={handleProfile} />
       <div className="h-2 bg-[#FDFDFD]"></div>
       <Element name="profile">
         <Profile />
@@ -140,6 +153,7 @@ const Media = (): JSX.Element => {
       <Element name="cmt">
         <Cmt />
       </Element>
+      <Footer />
       <ControlBar
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}

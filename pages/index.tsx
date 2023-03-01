@@ -46,20 +46,8 @@ export default function Home() {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
       <main className="h-screen bg-cream">
-        {/* <NavBar
-          handleFeed={handleFeed}
-          handleProfile={handleProfile}
-          handleCmt={handleCmt}
-        /> */}
         <PageTitle />
-        {/* <div className="">
-          <Feed />
-        </div> */}
-        <Media
-        /* feedIsHidden={feedIsHidden}
-          profileIsHidden={profileIsHidden}
-          cmtIsHidden={cmtIsHidden} */
-        />
+        <Media />
       </main>
     </>
   );
