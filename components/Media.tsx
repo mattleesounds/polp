@@ -70,6 +70,7 @@ const Media = (): JSX.Element => {
   const handleFeed = () => {
     scroller.scrollTo("feed", {
       smooth: true,
+      offset: -60,
     });
   };
 
@@ -91,8 +92,8 @@ const Media = (): JSX.Element => {
       <div className="fixed top-0 z-10 h-16 w-full bg-white">
         <div className="m-auto flex h-full max-w-[1240px] items-center justify-between">
           {/* logo */}
-          <div className="relative m-2 h-[32px] w-[90px]">
-            <Link to="feed" className="m-0">
+          <div className="relative m-2 h-[32px] w-[90px] hover:cursor-pointer">
+            <Link to="feed" className="w-full " offset={-60} smooth="true">
               <Image src="/logo.png" alt="POLP Logo" fill />
             </Link>
           </div>
@@ -133,26 +134,37 @@ const Media = (): JSX.Element => {
                       <li className="p-2 hover:bg-cream">community</li>
                     </button>
                   </Link>
+                  <a href="https://zippy-frangollo-058533.netlify.app/">
+                    <button onClick={toggleMenu} className="w-full text-left">
+                      <li className="p-2 hover:bg-cream">whitepaper</li>
+                    </button>
+                  </a>
                 </ul>
               </div>
             )}
-            <Link to="profile" className="mt-4">
+            <Link
+              to="profile"
+              offset={-60}
+              smooth="true"
+              className="mt-4 hover:cursor-pointer"
+            >
               <MdAccountCircle size={30} />
             </Link>
           </div>
         </div>
       </div>
       <Element name="feed">
-        <div className="h-4"></div>
+        <div className="h-2"></div>
       </Element>
       <Feed handleProfile={handleProfile} />
-      <div className="h-2 bg-[#FDFDFD]"></div>
+      <div className="h-0 bg-[#FDFDFD]"></div>
       <Element name="profile">
         <Profile />
       </Element>
       <Element name="cmt">
         <Cmt />
       </Element>
+      <div className="h-2 bg-[#FDFDFD]"></div>
       <Footer />
       <ControlBar
         isPlaying={isPlaying}

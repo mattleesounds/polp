@@ -20,12 +20,14 @@ const NavBar = ({ handleProfile, handleFeed, handleCmt }: props) => {
   }
 
   return (
-    <div className="font-inter fixed top-0 z-10 h-16 w-full bg-white">
+    <div className="fixed top-0 z-10 h-16 w-full bg-white font-inter">
       <div className="m-auto flex h-full max-w-[1240px] items-center justify-between">
         {/* logo */}
         <div className="relative m-2 h-[32px] w-[90px]">
           <div className="m-0">
-            <Image src="/logo.png" alt="POLP Logo" fill />
+            <button onClick={handleFeed}>
+              <Image src="/logo.png" alt="POLP Logo" fill />
+            </button>
           </div>
         </div>
 

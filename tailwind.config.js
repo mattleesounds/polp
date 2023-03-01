@@ -14,6 +14,8 @@ module.exports = {
       },
       fontFamily: {
         merriweather: ['Merriweather', 'serif'],
+        blogger: ['var(--font-blogger)', 'sans-serif'],
+        inter: ['Inter', 'sans-serif']
       },
     },
   },
