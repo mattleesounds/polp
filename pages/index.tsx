@@ -1,9 +1,7 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
-import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
 import Media from "@/components/Media";
-import Feed from "@/components/Feed";
 import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });

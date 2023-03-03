@@ -1,7 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import NavBar from "@/components/NavBar";
-import ControlBar from "@/components/ControlBar";
 
 const Cmt = () => {
   return (

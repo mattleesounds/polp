@@ -5,7 +5,6 @@ import Feed from "./Feed";
 import ControlBar from "./ControlBar";
 import Profile from "./Profile";
 import Cmt from "./Cmt";
-import NavBar from "./NavBar";
 import { Link, LinkProps, scroller, Element } from "react-scroll";
 import Image from "next/image";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
