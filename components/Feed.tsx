@@ -7,7 +7,7 @@ interface FeedProps {
 
 const Feed = ({ handleProfile }: FeedProps): JSX.Element => {
   return (
-    <div className=" z-0 m-2 mb-2 mt-0 flex h-full flex-col place-items-center bg-cream pb-24 leading-normal">
+    <div className=" z-0 m-0 mb-2 mt-0 flex h-full flex-col place-items-center bg-cream pb-24 leading-normal">
       <div className="h-48 text-center">
         <h1 className="m-8 mt-4 font-blogger text-5xl text-polp-orange">
           escape the algorithm

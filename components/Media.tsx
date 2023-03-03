@@ -89,7 +89,7 @@ const Media = (): JSX.Element => {
   return (
     <div>
       {/* NavBar */}
-      <div className="fixed top-0 z-10 h-16 w-full bg-white">
+      <div className="fixed top-0 z-10 m-0 h-16 w-full bg-white p-0">
         <div className="m-auto flex h-full max-w-[1240px] items-center justify-between">
           {/* logo */}
           <div className="relative m-2 h-[32px] w-[90px] hover:cursor-pointer">
@@ -153,14 +153,14 @@ const Media = (): JSX.Element => {
           </div>
         </div>
       </div>
-      <Element name="feed">
-        <div className="h-2"></div>
-      </Element>
-      <Feed handleProfile={handleProfile} />
-      <div className="h-0 bg-[#FDFDFD]"></div>
+
       <Element name="profile">
         <Profile />
       </Element>
+      <Element name="feed">
+        <div className="h-0"></div>
+      </Element>
+      <Feed handleProfile={handleProfile} />
       <Element name="cmt">
         <Cmt />
       </Element>

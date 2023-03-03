@@ -5,7 +5,7 @@ import ControlBar from "@/components/ControlBar";
 
 const Cmt = () => {
   return (
-    <div className="mt-0 mb-0 flex h-full w-[100%] flex-col place-items-center bg-cream pb-0">
+    <div className="m-0 mt-4 mb-0 flex h-full w-[100%] flex-col place-items-center bg-cream pb-0">
       <h1 className="m-2 mb-8 mt-4 text-center font-blogger text-5xl text-polp-orange">
         build community
       </h1>

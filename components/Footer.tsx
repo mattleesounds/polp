@@ -6,7 +6,7 @@ import { SiDiscord } from "react-icons/si";
 
 const Footer = () => {
   return (
-    <div className="flex h-36 justify-center bg-cream p-4">
+    <div className="mt-2 flex h-36 justify-center bg-cream p-4">
       <div className="flex w-full max-w-[1240px] text-slate-700">
         <div className="">
           <p>
