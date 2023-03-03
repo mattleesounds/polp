@@ -5,6 +5,8 @@ interface FeedProps {
   handleProfile: () => void;
 }
 
+//comment
+
 const Feed = ({ handleProfile }: FeedProps): JSX.Element => {
   return (
     <div className=" z-0 m-0 mb-2 mt-0 flex h-full flex-col place-items-center bg-cream pb-24 leading-normal">
