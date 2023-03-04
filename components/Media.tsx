@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import Feed from "./Feed";
 import ControlBar from "./ControlBar";
 import Profile from "./Profile";
-import Cmt from "./Cmt";
+import Cmtool from "./Cmtool";
 import { Link, LinkProps, scroller, Element } from "react-scroll";
 import Image from "next/image";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
@@ -161,7 +161,7 @@ const Media = (): JSX.Element => {
       </Element>
       <Feed handleProfile={handleProfile} />
       <Element name="cmt">
-        <Cmt />
+        <Cmtool />
       </Element>
       <div className="h-2 bg-[#FDFDFD]"></div>
       <Footer />
