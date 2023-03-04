@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-const Cmt = () => {
+const Cmt = (): JSX.Element => {
   return (
     <div className="m-0 mt-4 mb-0 flex h-full w-[100%] flex-col place-items-center bg-cream pb-0">
       <h1 className="m-2 mb-8 mt-4 text-center font-blogger text-5xl text-polp-orange">
