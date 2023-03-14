@@ -1,5 +1,15 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-export default function App({ Component, pageProps }: AppProps) {
+import { Authenticator, withAuthenticator } from "@aws-amplify/ui-react";
+import awsExports from "../src/aws-exports";
+import { Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
+
+Amplify.configure(awsExports);
+Auth.configure(awsExports);
+
+function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
 }
+
+export default withAuthenticator(App);
