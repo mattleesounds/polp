@@ -22,7 +22,7 @@ const Feed = ({ handleProfile }: FeedProps): JSX.Element => {
           join, please sign up for the waitlist.
         </p>
       </div>
-      <div className="m-4 mt-0 flex flex-col items-center justify-center  text-center">
+      <div className="m-4 mt-16 flex flex-col items-center justify-center text-center  md:mt-0">
         <a
           href="https://bsb2oht0phj.typeform.com/to/E2joby1U"
           className="m-12 mt-12 mb-12 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-polp-orange bg-[#FDFDFD] text-center text-2xl text-[#020202] hover:bg-slate-200 lg:mt-0"

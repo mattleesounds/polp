@@ -36,16 +36,16 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className="m-4 mt-0 flex items-center justify-center  text-center">
+      <div className="m-4 mt-0 flex items-center justify-center text-center">
         <a
           href="https://bsb2oht0phj.typeform.com/to/E2joby1U"
-          className="m-12 mt-0 mb-12 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-polp-orange bg-[#FDFDFD] p-2 text-center text-lg text-[#020202] hover:bg-slate-200"
+          className="m-12 mt-0 mb-12 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-polp-orange bg-[#FDFDFD] p-2 text-center text-[#020202] hover:bg-slate-200 md:text-lg"
         >
           signup for the waitlist
         </a>
         <a
           href="https://bsb2oht0phj.typeform.com/to/QFNUiYOa"
-          className="m-12 mb-12 mt-0 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-[#010101] bg-polp-orange p-2 text-center text-lg text-white hover:bg-[#efac90]"
+          className="m-12 mb-12 mt-0 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-[#010101] bg-polp-orange p-2 text-center text-white hover:bg-[#efac90] md:text-lg"
         >
           apply for artist account
         </a>

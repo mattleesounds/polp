@@ -10,12 +10,12 @@ const UserInfo = () => {
       <div className="h-2"></div>
       <div>
         <h1 className="text-xl font-bold">Email</h1>
-        <p>matt@polp.app</p>
+        <p>matt@polp.app | theo@polp.app</p>
       </div>
       <div className="h-2"></div>
       <div>
         <h1 className="text-xl font-bold">Location</h1>
-        <p>New Orleans, LA, USA</p>
+        <p>New Orleans, LA, USA, Earth, Known Universe</p>
       </div>
     </div>
   );
