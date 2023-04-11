@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
+import Upload from "./Upload";
 
 const NavBar = () => {
   return (
@@ -22,6 +23,8 @@ const NavBar = () => {
             placeholder="search..."
           />
         </div>
+
+        <Upload />
 
         {/* Menu */}
         <div className="m-0 grid h-full w-[90px] grid-cols-2">
