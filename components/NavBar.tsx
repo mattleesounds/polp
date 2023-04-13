@@ -3,9 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
-import Upload from "./Upload";
+import { useState } from "react";
 
 const NavBar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function toggleMenu() {
+    setIsOpen(!isOpen);
+  }
+
   return (
     <div className="fixed top-0 z-10 h-16 max-h-16 w-full bg-white">
       <div className="m-auto flex h-full max-w-[1240px] items-center justify-between">
@@ -24,13 +30,32 @@ const NavBar = () => {
           />
         </div>
 
-        <Upload />
-
         {/* Menu */}
-        <div className="m-0 grid h-full w-[90px] grid-cols-2">
-          <button className="m-2">
+        <div className="m-0 flex h-full w-[90px] ">
+          <button
+            className="m-2 mr-4 hover:cursor-pointer"
+            onClick={toggleMenu}
+          >
             <AiOutlineMenu size={20} />
           </button>
+          {isOpen && (
+            <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg md:w-[235px]">
+              <ul>
+                <Link href={"/"} className="w-full">
+                  <li className="p-2 hover:bg-cream">feed</li>
+                </Link>
+                <Link href="/profile" className="w-full">
+                  <li className="p-2 hover:bg-cream">profile</li>
+                </Link>
+                <Link href="/">
+                  <li className="p-2 hover:bg-cream">community</li>
+                </Link>
+                <Link href="/uploadPage">
+                  <li className="p-2 hover:bg-cream">upload music</li>
+                </Link>
+              </ul>
+            </div>
+          )}
           <Link href="/profile" className="mt-4">
             <MdAccountCircle size={30} />
           </Link>
