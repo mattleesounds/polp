@@ -2,6 +2,7 @@ import React from "react";
 import { Storage } from "aws-amplify";
 import { useState } from "react";
 import { Auth } from "aws-amplify";
+//Here's a comment
 
 const uploadFile = async (file: File): Promise<string> => {
   const { key } = await Storage.put(file.name, file, {
