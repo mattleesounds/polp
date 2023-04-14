@@ -64,22 +64,45 @@ const UploadFile = () => {
   };
 
   return (
-    <div>
+    <div className="flex-col content-center justify-center text-center ">
       <input
         type="text"
         placeholder="Track title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        className="mb-4"
       />
+      <br />
       <input
         type="text"
         placeholder="Track description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        className="mb-4"
       />
-      <input type="file" accept="audio/*" onChange={handleFileChange} />
-      <input type="file" accept="image/*" onChange={handleImageChange} />
-      <button onClick={handleUpload}>Upload</button>
+      <br />
+      <h2 className="mb-1 text-polp-orange">audio file</h2>
+      <input
+        type="file"
+        accept="audio/*"
+        onChange={handleFileChange}
+        className="mb-4 bg-white"
+      />
+      <br />
+      <h2 className="mb-1 text-polp-orange">cover image file</h2>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="mb-8 bg-white"
+      />
+      <br />
+      <button
+        onClick={handleUpload}
+        className="h-8 w-32 rounded-lg bg-polp-orange"
+      >
+        upload track
+      </button>
     </div>
   );
 };
