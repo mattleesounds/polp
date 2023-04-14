@@ -3,6 +3,10 @@ import { Storage } from "aws-amplify";
 import { Auth } from "aws-amplify";
 
 const uploadFile = async (file: File, metadata: any): Promise<string> => {
+  console.log(
+    `Uploading file: ${file.name}, size: ${file.size}, type: ${file.type}, metadata:`,
+    metadata
+  );
   const { key } = await Storage.put(file.name, file, {
     contentType: file.type,
     metadata,
@@ -12,6 +16,9 @@ const uploadFile = async (file: File, metadata: any): Promise<string> => {
 };
 
 const uploadImage = async (image: File): Promise<string> => {
+  console.log(
+    `Uploading image: ${image.name}, size: ${image.size}, type: ${image.type}`
+  );
   const { key } = await Storage.put(image.name, image, {
     contentType: image.type,
   });
@@ -43,6 +50,21 @@ const UploadFile = () => {
     if (!file) return;
 
     try {
+      // Ensure the user is signed in
+      let currentUser;
+      try {
+        currentUser = await Auth.currentAuthenticatedUser();
+      } catch (error) {
+        console.error("User is not authenticated");
+        return;
+      }
+
+      // Check for empty title and description
+      if (!title || !description) {
+        console.error("Title or description is missing");
+        return;
+      }
+
       // Metadata for the audio file
       const metadata = {
         title,
@@ -59,7 +81,12 @@ const UploadFile = () => {
         console.log("Image uploaded:", uploadedImageKey);
       }
     } catch (error) {
-      console.error("File or image upload failed:", error);
+      if (error instanceof Error) {
+        console.error("File or image upload failed:", error.message);
+        console.error("Error details:", JSON.stringify(error, null, 2));
+      } else {
+        console.error("File or image upload failed:", error);
+      }
     }
   };
 
@@ -70,18 +97,18 @@ const UploadFile = () => {
         placeholder="Track title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="mb-4"
+        className="mb-4 w-72 p-1"
       />
       <br />
-      <input
-        type="text"
+      <textarea
+        rows={8}
         placeholder="Track description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="mb-4"
+        className="mb-4 w-72 p-1"
       />
       <br />
-      <h2 className="mb-1 text-polp-orange">audio file</h2>
+      <h2 className="text-lg text-polp-orange">audio file</h2>
       <input
         type="file"
         accept="audio/*"
@@ -89,7 +116,7 @@ const UploadFile = () => {
         className="mb-4 bg-white"
       />
       <br />
-      <h2 className="mb-1 text-polp-orange">cover image file</h2>
+      <h2 className="text-lg text-polp-orange">cover image file</h2>
       <input
         type="file"
         accept="image/*"
