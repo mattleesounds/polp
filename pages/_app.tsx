@@ -5,6 +5,9 @@ import awsExports from "../aws-exports.js";
 import { Auth } from "aws-amplify";
 import { Amplify } from "aws-amplify";
 import { Storage } from "@aws-amplify/storage";
+import { Logger } from "aws-amplify";
+
+//Logger.LOG_LEVEL = "DEBUG";
 
 Amplify.configure(awsExports);
 Auth.configure(awsExports);
