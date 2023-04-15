@@ -26,7 +26,7 @@ const uploadImage = async (image: File): Promise<string> => {
   return key;
 };
 
-const UploadFile = () => {
+const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -134,4 +134,4 @@ const UploadFile = () => {
   );
 };
 
-export default UploadFile;
+export default Upload;
