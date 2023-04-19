@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
   "auth": {
-    "polp324ac576d": {
+    "YOUR_AUTH_RESOURCE_NAME": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
       "IdentityPoolId": "string",
@@ -8,6 +8,12 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"
+    }
+  },
+  "storage": {
+    "YOUR_STORAGE_RESOURCE_NAME": {
+      "BucketName": "string",
+      "Region": "string"
     }
   }
 }

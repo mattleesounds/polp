@@ -1,6 +1,6 @@
 {
   "auth": {
-    "polp324ac576d": {
+    "YOUR_AUTH_RESOURCE_NAME": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -16,13 +16,22 @@
           "EMAIL"
         ],
         "socialProviders": [],
-        "usernameAttributes": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
         "verificationMechanisms": [
           "EMAIL"
         ]
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "storage": {
+    "YOUR_STORAGE_RESOURCE_NAME": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }
