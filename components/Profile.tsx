@@ -5,7 +5,7 @@ import { CognitoUser } from "@aws-amplify/auth";
 import Image from "next/image";
 
 interface UserProfile {
-  username: string;
+  name: string;
   email: string;
   profilePicture: string | null;
   bio?: string;
@@ -15,7 +15,7 @@ const Profile = (): JSX.Element => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [formValues, setFormValues] = useState<UserProfile>({
-    username: "",
+    name: "",
     email: "",
     profilePicture: null,
     bio: "",
@@ -31,28 +31,27 @@ const Profile = (): JSX.Element => {
         const user: CognitoUser | null = await Auth.currentAuthenticatedUser();
         if (user) {
           const attributes = await Auth.userAttributes(user);
-          const email = attributes.find((attr) => attr.getName() === "email");
+          const emailAttr = attributes.find(
+            (attr) => attr.getName() === "email"
+          );
+          const nameAttr = attributes.find(
+            (attr) => attr.getName() === "custom:Name"
+          );
+          const bioAttr = attributes.find(
+            (attr) => attr.getName() === "custom:Bio"
+          );
           const username = user.getUsername();
-          let profilePicture: string | null = null;
+          /* let profilePicture: string | null = null;
           try {
             profilePicture = await Storage.get(`profile-pictures/${username}`);
           } catch (error) {
-            // Type guard to narrow down the error type
-            if (
-              error &&
-              typeof error === "object" &&
-              "code" in error &&
-              error.code === "NoSuchKey"
-            ) {
-              console.warn("No profile picture found for the user:", error);
-            } else {
-              console.error("Error fetching profile picture:", error);
-            }
-          }
+            console.log("pfp error");
+          } */
           const profile = {
-            username,
-            email: email ? email.getValue() : "",
-            profilePicture,
+            name: nameAttr ? nameAttr.getValue() : "",
+            email: emailAttr ? emailAttr.getValue() : "",
+            profilePicture: null,
+            bio: bioAttr ? bioAttr.getValue() : "",
           };
           setUserProfile(profile);
           setFormValues(profile);
@@ -97,10 +96,15 @@ const Profile = (): JSX.Element => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("submitting");
     try {
       const user: CognitoUser | null = await Auth.currentAuthenticatedUser();
       if (user) {
-        await Auth.updateUserAttributes(user, { email: formValues.email });
+        await Auth.updateUserAttributes(user, {
+          email: formValues.email,
+          "custom:Name": formValues.name,
+          "custom:Bio": formValues.bio,
+        });
         setUserProfile(formValues);
         setEditMode(false);
       }
@@ -132,8 +136,8 @@ const Profile = (): JSX.Element => {
           {!editMode && (
             <div>
               <div className="mt-6">
-                <h2 className="text-xl font-semibold">Username</h2>
-                <p className="text-gray-700">{userProfile?.username}</p>
+                <h2 className="text-xl font-semibold">Name</h2>
+                <p className="text-gray-700">{userProfile?.name}</p>
               </div>
               <div className="mt-4">
                 <h2 className="text-xl font-semibold">Email</h2>
@@ -162,13 +166,13 @@ const Profile = (): JSX.Element => {
                 className="mt-2 w-full rounded-md border border-gray-300 p-2"
               />
               <label htmlFor="username" className="block text-gray-700">
-                Username
+                Name
               </label>
               <input
                 type="text"
-                name="username"
-                id="username"
-                value={formValues.username}
+                name="name"
+                id="name"
+                value={formValues.name}
                 onChange={handleChange}
                 className="mt-2 w-full rounded-md border border-gray-300 p-2"
               />
@@ -198,6 +202,7 @@ const Profile = (): JSX.Element => {
               <button
                 type="submit"
                 className="mt-4 w-full rounded-md bg-blue-600 p-2 text-white"
+                onClick={handleSubmit}
               >
                 Save Changes
               </button>

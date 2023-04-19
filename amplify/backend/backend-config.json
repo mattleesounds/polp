@@ -1,6 +1,6 @@
 {
   "auth": {
-    "polp324ac576d": {
+    "YOUR_AUTH_RESOURCE_NAME": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -16,7 +16,9 @@
           "EMAIL"
         ],
         "socialProviders": [],
-        "usernameAttributes": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
         "verificationMechanisms": [
           "EMAIL"
         ]

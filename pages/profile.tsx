@@ -5,7 +5,12 @@ import UserInfo from "@/components/UserInfo";
 import Profile from "@/components/Profile";
 
 const profile = () => {
-  return <Profile />;
+  return (
+    <div>
+      <NavBar />
+      <Profile />
+    </div>
+  );
 };
 
 export default profile;

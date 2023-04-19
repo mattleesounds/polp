@@ -1,19 +1,19 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-polp3-dev-91820-authRole",
-      "UnauthRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/amplify-polp3-dev-91820-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/amplify-polp3-dev-91820-authRole",
+      "AuthRoleName": "amplify-YOUR_PROJECT_NAME-dev-STACK_ID-authRole",
+      "UnauthRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/amplify-YOUR_PROJECT_NAME-dev-STACK_ID-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/amplify-YOUR_PROJECT_NAME-dev-STACK_ID-authRole",
       "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-polp3-dev-91820-deployment",
-      "UnauthRoleName": "amplify-polp3-dev-91820-unauthRole",
-      "StackName": "amplify-polp3-dev-91820",
-      "StackId": "arn:aws:cloudformation:us-east-2:YOUR_AWS_ACCOUNT_ID:stack/amplify-polp3-dev-91820/250ee260-b2c4-11ed-b28b-0614d13e7d26",
-      "AmplifyAppId": "didj7t2s2amh3"
+      "DeploymentBucketName": "amplify-YOUR_PROJECT_NAME-dev-STACK_ID-deployment",
+      "UnauthRoleName": "amplify-YOUR_PROJECT_NAME-dev-STACK_ID-unauthRole",
+      "StackName": "amplify-YOUR_PROJECT_NAME-dev-STACK_ID",
+      "StackId": "arn:aws:cloudformation:us-east-2:YOUR_AWS_ACCOUNT_ID:stack/amplify-YOUR_PROJECT_NAME-dev-STACK_ID/YOUR_STACK_UUID",
+      "AmplifyAppId": "YOUR_AMPLIFY_APP_ID"
     },
     "categories": {
       "auth": {
-        "polp324ac576d": {}
+        "YOUR_AUTH_RESOURCE_NAME": {}
       }
     }
   }
