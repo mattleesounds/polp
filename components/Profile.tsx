@@ -24,6 +24,7 @@ const Profile = (): JSX.Element => {
   const [profilePictureSrc, setProfilePictureSrc] = useState(
     userProfile?.profilePicture || "/logo.png"
   );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -40,17 +41,20 @@ const Profile = (): JSX.Element => {
           const bioAttr = attributes.find(
             (attr) => attr.getName() === "custom:Bio"
           );
-          const username = user.getUsername();
-          /* let profilePicture: string | null = null;
+          const subAttribute = attributes.find(
+            (attr) => attr.getName() === "sub"
+          );
+          const sub = subAttribute ? subAttribute.getValue() : "";
+          let profilePicture: string | null = null;
           try {
-            profilePicture = await Storage.get(`profile-pictures/${username}`);
+            profilePicture = await Storage.get(`profile-pictures/${sub}`);
           } catch (error) {
             console.log("pfp error");
-          } */
+          }
           const profile = {
             name: nameAttr ? nameAttr.getValue() : "",
             email: emailAttr ? emailAttr.getValue() : "",
-            profilePicture: null,
+            profilePicture,
             bio: bioAttr ? bioAttr.getValue() : "",
           };
           setUserProfile(profile);
@@ -63,28 +67,9 @@ const Profile = (): JSX.Element => {
     fetchUserProfile();
   }, []);
 
-  const handleProfilePictureUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    if (file) {
-      setUploading(true);
-      try {
-        const user: CognitoUser | null = await Auth.currentAuthenticatedUser();
-        const username = user ? user.getUsername() : "";
-        const result = await Storage.put(`profile-pictures/${username}`, file, {
-          contentType: file.type,
-        });
-        const url = await Storage.get((result as any).key);
-        setUserProfile(
-          (prev) => ({ ...prev, profilePicture: url } as UserProfile)
-        );
-      } catch (error) {
-        console.error("Error uploading profile picture:", error);
-      } finally {
-        setUploading(false);
-      }
-    }
+    setSelectedFile(file);
   };
 
   const handleChange = (
@@ -99,7 +84,11 @@ const Profile = (): JSX.Element => {
     console.log("submitting");
     try {
       const user: CognitoUser | null = await Auth.currentAuthenticatedUser();
-      if (user) {
+      const attributes = await Auth.userAttributes(user);
+      const subAttribute = attributes.find((attr) => attr.getName() === "sub");
+      const sub = subAttribute ? subAttribute.getValue() : "";
+
+      if (user && sub) {
         await Auth.updateUserAttributes(user, {
           email: formValues.email,
           "custom:Name": formValues.name,
@@ -107,6 +96,22 @@ const Profile = (): JSX.Element => {
         });
         setUserProfile(formValues);
         setEditMode(false);
+      }
+
+      // Upload profile picture if a file is selected
+      if (selectedFile) {
+        const result = await Storage.put(
+          `profile-pictures/${sub}`,
+          selectedFile,
+          {
+            contentType: selectedFile.type,
+          }
+        );
+        const url = await Storage.get((result as any).key);
+        setUserProfile(
+          (prev) => ({ ...prev, profilePicture: url } as UserProfile)
+        );
+        console.log(userProfile);
       }
     } catch (error) {
       console.error("Error updating user profile:", error);
@@ -122,8 +127,8 @@ const Profile = (): JSX.Element => {
       <div className="my-12 flex flex-col items-center">
         <h1 className="mb-6 text-4xl">Profile</h1>
         <div className="w-full rounded-md border border-gray-300 p-6 sm:w-96">
-          <Image
-            src={profilePictureSrc}
+          <img
+            src={userProfile?.profilePicture || "/logo.png"}
             alt="Profile"
             className="mx-auto h-32 w-32 rounded-full object-contain"
             width={128}
@@ -162,7 +167,7 @@ const Profile = (): JSX.Element => {
                 name="profilePicture"
                 id="profilePicture"
                 accept="image/*"
-                onChange={handleProfilePictureUpload}
+                onChange={handleFileChange}
                 className="mt-2 w-full rounded-md border border-gray-300 p-2"
               />
               <label htmlFor="username" className="block text-gray-700">
