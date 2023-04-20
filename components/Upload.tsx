@@ -3,12 +3,23 @@ import { Storage } from "aws-amplify";
 import { Auth } from "aws-amplify";
 //Here's a comment
 
-const uploadFile = async (file: File, metadata: any): Promise<string> => {
+interface Metadata {
+  title: string;
+  sub: string;
+  artist: string;
+  description?: string;
+}
+
+const uploadFile = async (
+  file: File,
+  metadata: any,
+  path: string
+): Promise<string> => {
   console.log(
     `Uploading file: ${file.name}, size: ${file.size}, type: ${file.type}, metadata:`,
     metadata
   );
-  const { key } = await Storage.put(file.name, file, {
+  const { key } = await Storage.put(path + file.name, file, {
     contentType: file.type,
     metadata,
   });
@@ -16,13 +27,25 @@ const uploadFile = async (file: File, metadata: any): Promise<string> => {
   return key;
 };
 
-const uploadImage = async (image: File): Promise<string> => {
+const uploadImage = async (image: File, path: string): Promise<string> => {
   console.log(
     `Uploading image: ${image.name}, size: ${image.size}, type: ${image.type}`
   );
-  const { key } = await Storage.put(image.name, image, {
+  const { key } = await Storage.put(path + image.name, image, {
     contentType: image.type,
   });
+
+  return key;
+};
+
+const uploadMetadata = async (metadata: any, path: string): Promise<string> => {
+  const { key } = await Storage.put(
+    path + "metadata.json",
+    JSON.stringify(metadata),
+    {
+      contentType: "application/json",
+    }
+  );
 
   return key;
 };
@@ -61,26 +84,43 @@ const Upload = () => {
       }
 
       // Check for empty title and description
-      if (!title || !description) {
-        console.error("Title or description is missing");
+      if (!title) {
+        console.error("Title is missing");
         return;
       }
 
+      // Create the folder structure
+      const subId = currentUser.attributes.sub;
+      const folderPath = `media/${subId}_${title}/`;
+      const metadataFolderPath = folderPath + "metadata/";
+
       // Metadata for the audio file
-      const metadata = {
-        title,
-        description,
+      // Metadata for the audio file
+      const metadata: Metadata = {
+        title: title,
+        sub: subId.toString(),
+        artist: currentUser.username,
       };
+      if (description) {
+        metadata.description = description;
+      }
 
       // Upload audio file with metadata
-      const uploadedFileKey = await uploadFile(file, metadata);
+      const uploadedFileKey = await uploadFile(file, metadata, folderPath);
       console.log("File uploaded:", uploadedFileKey);
 
       // Upload track image if available
       if (image) {
-        const uploadedImageKey = await uploadImage(image);
+        const uploadedImageKey = await uploadImage(image, metadataFolderPath);
         console.log("Image uploaded:", uploadedImageKey);
       }
+
+      // Upload metadata as JSON file
+      const uploadedMetadataKey = await uploadMetadata(
+        metadata,
+        metadataFolderPath
+      );
+      console.log("Metadata uploaded:", uploadedMetadataKey);
     } catch (error) {
       if (error instanceof Error) {
         console.error("File or image upload failed:", error.message);
