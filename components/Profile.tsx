@@ -133,7 +133,6 @@ const Profile = (): JSX.Element => {
             className="mx-auto h-32 w-32 rounded-full object-contain"
             width={128}
             height={128}
-            layout="fixed"
             loading="lazy"
           />
           {!editMode && (

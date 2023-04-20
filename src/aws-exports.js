@@ -9,7 +9,7 @@ const awsmobile = {
     "aws_user_pools_web_client_id": "YOUR_COGNITO_WEB_CLIENT_ID",
     "oauth": {
         "domain": "YOUR_COGNITO_DOMAIN.auth.us-east-2.amazoncognito.com",
-        "scope": ["email", "openid", "profile"],
+        "scope": ["email", "openid", "profile","aws.cognito.signin.user.admin"],
         "redirectSignIn": "http://localhost:3000/",
         "redirectSignOut": "http://localhost:3000/",
         "responseType": 'code', // or 'token'
