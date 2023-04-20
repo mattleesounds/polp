@@ -2,10 +2,21 @@ import NavBar from "@/components/NavBar";
 import React from "react";
 import Image from "next/image";
 import UserInfo from "@/components/UserInfo";
+import Profile from "@/components/Profile";
 
 const profile = () => {
   return (
-    <div className="h-screen bg-cream">
+    <div>
+      <NavBar />
+      <Profile />
+    </div>
+  );
+};
+
+export default profile;
+
+{
+  /* <div className="h-screen bg-cream">
       <NavBar />
       <div className="h-4 bg-cream"></div>
       <div className="flex">
@@ -21,8 +32,5 @@ const profile = () => {
           <UserInfo />
         </div>
       </div>
-    </div>
-  );
-};
-
-export default profile;
+    </div>  */
+}

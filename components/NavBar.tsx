@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
 import { useState } from "react";
+import { Auth } from "aws-amplify";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,16 @@ const NavBar = () => {
   function toggleMenu() {
     setIsOpen(!isOpen);
   }
+
+  const handleSignOut = async () => {
+    try {
+      await Auth.signOut();
+      // Redirect to the home page or any other page after successful sign-out
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
 
   return (
     <div className="fixed top-0 z-10 h-16 max-h-16 w-full bg-white">
@@ -53,6 +64,9 @@ const NavBar = () => {
                 <Link href="/uploadPage">
                   <li className="p-2 hover:bg-cream">upload music</li>
                 </Link>
+                <button onClick={handleSignOut}>
+                  <li className="p-2 hover:bg-cream">sign out</li>
+                </button>
               </ul>
             </div>
           )}
