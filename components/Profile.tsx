@@ -100,6 +100,7 @@ const Profile = (): JSX.Element => {
 
       // Upload profile picture if a file is selected
       if (selectedFile) {
+        console.log("uploading image");
         const result = await Storage.put(
           `profile-pictures/${sub}`,
           selectedFile,
@@ -122,19 +123,23 @@ const Profile = (): JSX.Element => {
     setEditMode(!editMode);
   };
 
+  /* userProfile?.profilePicture ||  */
+
   return (
     <div className="container mx-auto">
       <div className="my-12 flex flex-col items-center">
-        <h1 className="mb-6 text-4xl">Profile</h1>
+        <h1 className="mb-6 mt-8 text-4xl">Profile</h1>
         <div className="w-full rounded-md border border-gray-300 p-6 sm:w-96">
-          <img
-            src={userProfile?.profilePicture || "/logo.png"}
-            alt="Profile"
-            className="mx-auto h-32 w-32 rounded-full object-contain"
-            width={128}
-            height={128}
-            loading="lazy"
-          />
+          <div className="h-full">
+            <img
+              src={userProfile?.profilePicture || "/logo.png"}
+              alt="Profile"
+              className="mx-auto h-32 w-32 rounded-full"
+              loading="lazy"
+              width="120"
+              height="120"
+            />
+          </div>
           {!editMode && (
             <div>
               <div className="mt-6">
