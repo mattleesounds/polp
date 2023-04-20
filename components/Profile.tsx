@@ -134,9 +134,7 @@ const Profile = (): JSX.Element => {
             width={128}
             height={128}
             layout="fixed"
-            onError={() => {
-              setProfilePictureSrc("/logo.png"); // Replace with the path to your default profile picture
-            }}
+            loading="lazy"
           />
           {!editMode && (
             <div>
