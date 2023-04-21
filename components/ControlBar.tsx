@@ -84,8 +84,6 @@ const ControlBar = ({
     setProgressMinSec(
       `${progressMinutes}:${progressSeconds.toString().padStart(2, "0")}`
     );
-
-    console.log(`${progressMinSec}/${durationMinSec}`);
   }, [currentTrack, audioRefs, progress, durationMinSec, progressMinSec]);
 
   const handleMouseDown = (
