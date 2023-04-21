@@ -44,6 +44,7 @@ const ControlBar = ({
   const knobRef = createRef<KnobRef>();
   const audioRefsArray = Array.from(audioRefs.current);
   const track = tracks.find((track) => track.source === currentTrack);
+
   const [progressMinSec, setProgressMinSec] = useState("");
   const [durationMinSec, setDurationMinSec] = useState("");
 
@@ -90,9 +91,6 @@ const ControlBar = ({
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    /*const progress = (event.clientX / event.currentTarget.clientWidth) * 100;
-    setProgress(progress);
-    audioRefs.current.get(currentTrack) = (progress / 100) * audioRef.current!.duration; */
     if (!currentTrack) return;
 
     const audio = audioRefs.current.get(currentTrack);
@@ -103,7 +101,11 @@ const ControlBar = ({
     const rect = progressBar.getBoundingClientRect();
     const progress = (mouseX - rect.left) / rect.width;
 
-    audio.currentTime = progress * audio.duration;
+    // Ensure that the calculated time is a valid finite number
+    const newTime = progress * audio.duration;
+    if (Number.isFinite(newTime)) {
+      audio.currentTime = newTime;
+    }
   };
 
   const handlePrevious = (trackSource: string) => {
@@ -147,72 +149,17 @@ const ControlBar = ({
     audio.currentTime = 0;
   };
 
-  /* const handlePrevious = (trackSource: string) => {
-    const audioRefsArray = Array.from(audioRefs.current?.values());
-    
-    const currentIndex = audioRefsArray.findIndex(ref => audioRefs.current.src === currentTrack);
-    console.log(audioRefsArray[currentIndex - 1].src)
-    if (currentIndex > 0) {
-      const previousTrack = audioRefsArray[currentIndex - 1].src;
-      
-      setCurrentTrack(previousTrack);
-      //handlePlayPause(currentTrack);
-    }
-  }; */
-
-  /* 
-
-  const handleTimeUpdate = (event: React.SyntheticEvent<HTMLAudioElement, Event>) => {
-    const progress = (event.currentTarget.currentTime / event.currentTarget.duration) * 100;
-    setProgress(progress);
+  if (!track) {
+    return <></>;
   }
 
-  
-
-  const handleKnobMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event.preventDefault();
-    setStartX(event.clientX);
-    setStartProgress(progress);
-  }
-
-  
-
-  const handleKnobMouseUp = () => {
-    setStartX(null);
-    setStartProgress(null);
-  }
-
-  const [startX, setStartX] = useState<number | null>(null);
-  const [startProgress, setStartProgress] = useState<number | null>(null);
-
-  useEffect(() => {
-    const handleKnobMouseMove = (event: MouseEvent) => {
-      const progress = startProgress! + (event.clientX - startX!) / knobRef.current!.parentElement!.clientWidth * 100;
-      setProgress(progress);
-      audioRef.current!.currentTime = (progress / 100) * audioRef.current!.duration;
-    }
-
-    if (startX && startProgress) {
-      window.addEventListener('mousemove', handleKnobMouseMove);
-      window.addEventListener('mouseup', handleKnobMouseUp);
-    } else {
-      window.removeEventListener('mousemove', handleKnobMouseMove);
-      window.removeEventListener('mouseup', handleKnobMouseUp);
-    }
-    return () => {
-      window.removeEventListener('mousemove', handleKnobMouseMove);
-      window.removeEventListener('mouseup', handleKnobMouseUp);
-    };
-  }, [knobRef, startX, startProgress]);
-  
-   */
   return (
-    <div className="fixed leading-none p-0 bottom-0 bg-white h-16 w-full m-0">
-      <div className="flex justify-center m-0 p-0">
+    <div className="fixed bottom-0 m-0 h-16 w-full bg-white p-0 leading-none">
+      <div className="m-0 flex justify-center p-0">
         {/* Now Playing */}
         <div className="absolute left-1">
           <div className="flex flex-col">
-            <h2 className="text-lg pl-2">
+            <h2 className="pl-2 text-lg">
               {currentTrack ? track!.artist : ""}
             </h2>
             <h3 className="pl-2">{currentTrack ? track!.title : ""}</h3>
@@ -220,7 +167,7 @@ const ControlBar = ({
         </div>
 
         {/* Controls */}
-        <div className="relative max-w-1/2 m-0 p-0 top-0 bg-white">
+        <div className="max-w-1/2 relative top-0 m-0 bg-white p-0">
           <button
             className="relative"
             onClick={() => handlePrevious(currentTrack!)}
@@ -230,7 +177,7 @@ const ControlBar = ({
 
           <button
             onClick={() => handlePlayPause(currentTrack!)}
-            className="focus:outline-none relative top-0"
+            className="relative top-0 focus:outline-none"
           >
             {isPlaying ? (
               <BiPause size={50} className="mt-[3px]" />
@@ -257,7 +204,7 @@ const ControlBar = ({
 
       {/* Progress Bar */}
       <div
-        className="absolute w-[90%] left-[5%] h-[6px] bottom-2 bg-cream cursor-pointer"
+        className="absolute left-[5%] bottom-2 h-[6px] w-[90%] cursor-pointer bg-cream"
         onMouseDown={handleMouseDown}
       >
         <div
