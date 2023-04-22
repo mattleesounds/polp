@@ -1,8 +1,10 @@
 // components/Profile.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Auth, Storage } from "aws-amplify";
 import { CognitoUser } from "@aws-amplify/auth";
 import Image from "next/image";
+import ControlBar from "@/components/ControlBar";
+import MediaContext from "@/components/MediaContext";
 
 interface UserProfile {
   name: string;
@@ -223,6 +225,7 @@ const Profile = (): JSX.Element => {
           </button>
         </div>
       </div>
+      <ControlBar />
     </div>
   );
 };

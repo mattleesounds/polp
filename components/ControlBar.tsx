@@ -4,6 +4,8 @@ import { GiPauseButton, GiPlayButton } from "react-icons/gi";
 import { BsFillSkipEndFill, BsFillSkipStartFill } from "react-icons/bs";
 import { TrackType } from "@/lib/types";
 import { BiPlay, BiPause, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import { useContext } from "react";
+import MediaContext from "./MediaContext";
 
 interface Props {}
 
@@ -17,27 +19,29 @@ interface KnobRef extends HTMLDivElement {
   parentElement: HTMLElement | null;
 }
 
-interface Props {
+/* interface Props {
   isPlaying: boolean;
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPlaying: (isPlaying: boolean) => void;
   currentTrack: string | null;
   audioRefs: React.MutableRefObject<Map<string, HTMLAudioElement>>;
   setCurrentTrack: React.Dispatch<React.SetStateAction<any>>;
   durRefs: React.MutableRefObject<Map<string, number>>;
   handlePlayPause: (trackSource: string) => void;
   tracks: TrackType[];
-}
+} */
 
-const ControlBar = ({
-  isPlaying,
-  setIsPlaying,
-  currentTrack,
-  setCurrentTrack,
-  audioRefs,
-  durRefs,
-  handlePlayPause,
-  tracks,
-}: Props): JSX.Element => {
+const ControlBar = (): JSX.Element => {
+  const {
+    isPlaying,
+    setIsPlaying,
+    currentTrack,
+    setCurrentTrack,
+    handlePlayPause,
+    tracks,
+    audioRefs,
+    durRefs,
+  } = useContext(MediaContext);
+
   const [progress, setProgress] = useState(0);
   //const audioRef = useRef<HTMLAudioElement>(null);
   /* const knobRef = useRef<KnobRef>({ current: null, parentElement: null }); */

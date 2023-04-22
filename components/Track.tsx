@@ -1,24 +1,27 @@
-import React from 'react'
-import { AiOutlinePause } from 'react-icons/ai'
-import Image from 'next/image'
-import {IoMdShareAlt } from 'react-icons/io'
-import { BiPlay, BiPause } from 'react-icons/bi'
-import { TrackType } from '@/lib/types'
-import { useRef, useState, useEffect } from 'react'
+import React from "react";
+import { AiOutlinePause } from "react-icons/ai";
+import Image from "next/image";
+import { IoMdShareAlt } from "react-icons/io";
+import { BiPlay, BiPause } from "react-icons/bi";
+import { TrackType } from "@/lib/types";
+import { useRef, useState, useEffect, useContext } from "react";
+import MediaContext from "./MediaContext";
 
 interface TrackProps {
-  setCurrentTrack: React.Dispatch<React.SetStateAction<any>>; 
-  isPlaying: boolean;
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   track: TrackType;
-  currentTrack: string | null;
-  handlePlayPause: (trackSource: string) => void;
-  audioRefs: React.MutableRefObject<Map<string, HTMLAudioElement>>;
-  durRefs: React.MutableRefObject<Map<string, number>>;
 }
 
-const Track = ({ isPlaying, setIsPlaying, track, handlePlayPause, audioRefs, currentTrack, setCurrentTrack, durRefs }: TrackProps): JSX.Element =>  {
-  
+const Track = ({ track }: TrackProps): JSX.Element => {
+  const {
+    isPlaying,
+    setIsPlaying,
+    currentTrack,
+    setCurrentTrack,
+    handlePlayPause,
+    audioRefs,
+    durRefs,
+  } = useContext(MediaContext);
+
   /* States */
   const [duration, setDuration] = useState(0);
 
@@ -35,40 +38,39 @@ const Track = ({ isPlaying, setIsPlaying, track, handlePlayPause, audioRefs, cur
   }, [audioRefs, track.source, durRefs, duration]);
 
   return (
-    <div className="w-[88%] left-[6%] h-36 bg-white flex m-3">
-      
+    <div className="left-[6%] m-3 flex h-36 w-[88%] bg-white">
       {/* Art/Controls */}
-      <div className="w-[30%] h-[69%] bg-slate-400 flex justify-center items-center">
-        <button onClick={() =>handlePlayPause(track.source)}>
-          { isPlaying && track.source === currentTrack ? <BiPause size={60} /> : <BiPlay size={60}/> }
+      <div className="flex h-[69%] w-[30%] items-center justify-center bg-slate-400">
+        <button onClick={() => handlePlayPause(track.source)}>
+          {isPlaying && track.source === currentTrack ? (
+            <BiPause size={60} />
+          ) : (
+            <BiPlay size={60} />
+          )}
         </button>
       </div>
 
       {/* Audio */}
       <audio ref={audioRef} src={track.source} />
-     
+
       {/* Info/Progress */}
-      <div className="flex-col w-[70%] h-full">
+      <div className="h-full w-[70%] flex-col">
         <div className="h-[60%]">
-          <h2 className="p-2 text-xl">
-            {track.title}
-          </h2>
-          <h3 className="p-2 pt-0 pb-1 text-lg">      
-            {track.artist}
-          </h3>
+          <h2 className="p-2 text-xl">{track.title}</h2>
+          <h3 className="p-2 pt-0 pb-1 text-lg">{track.artist}</h3>
           <h4 className="p-2 pt-0 pb-1 text-polp-orange">
             {Math.floor(duration / 60)}:{Math.floor(duration % 60)}
           </h4>
         </div>
-        <div className="h-[40%] flex justify-end mr-6 mt-0">
-          <button className="h-12 w-24 bg-cream ml-[25px] border-polp-orange border-solid border-2 flex place-content-center items-center">
+        <div className="mr-6 mt-0 flex h-[40%] justify-end">
+          <button className="ml-[25px] flex h-12 w-24 place-content-center items-center border-2 border-solid border-polp-orange bg-cream">
             <p className="m-1">Share</p>
-            <IoMdShareAlt size={20} className="m-1"/>
+            <IoMdShareAlt size={20} className="m-1" />
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Track
+export default Track;

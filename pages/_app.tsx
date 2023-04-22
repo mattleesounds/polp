@@ -9,6 +9,7 @@ import { Logger } from "aws-amplify";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import SignIn from "@/components/SignIn";
+import MediaProvider from "@/components/MediaProvider";
 
 //Logger.LOG_LEVEL = "DEBUG";
 
@@ -36,9 +37,11 @@ function App({ Component, pageProps }: AppProps) {
     return <SignIn />;
   }
   return (
-    <Authenticator loginMechanisms={["email"]}>
-      <Component {...pageProps} />
-    </Authenticator>
+    <MediaProvider>
+      <Authenticator loginMechanisms={["email"]}>
+        <Component {...pageProps} />
+      </Authenticator>
+    </MediaProvider>
   );
 }
 
