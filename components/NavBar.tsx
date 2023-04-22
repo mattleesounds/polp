@@ -15,11 +15,11 @@ const NavBar = () => {
 
   const handleSignOut = async () => {
     try {
-      await Auth.signOut();
-      // Redirect to the home page or any other page after successful sign-out
-      window.location.href = "/";
+      console.log("Attempting to sign out...");
+      await Auth.signOut({ global: true });
+      console.log("Sign out successful.");
     } catch (error) {
-      console.error("Error signing out: ", error);
+      console.error("Error signing out:", error);
     }
   };
 

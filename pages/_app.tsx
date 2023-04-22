@@ -9,12 +9,16 @@ import { Logger } from "aws-amplify";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import SignIn from "@/components/SignIn";
+import MediaProvider from "@/components/MediaProvider";
 
 //Logger.LOG_LEVEL = "DEBUG";
 
 Amplify.configure(awsExports);
 Auth.configure(awsExports);
 Storage.configure(awsExports);
+
+console.log("Redirect Sign In:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_IN);
+console.log("Redirect Sign Out:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_OUT);
 
 function App({ Component, pageProps }: AppProps) {
   const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
@@ -36,9 +40,11 @@ function App({ Component, pageProps }: AppProps) {
     return <SignIn />;
   }
   return (
-    <Authenticator loginMechanisms={["email"]}>
-      <Component {...pageProps} />
-    </Authenticator>
+    <MediaProvider>
+      <Authenticator loginMechanisms={["email"]}>
+        <Component {...pageProps} />
+      </Authenticator>
+    </MediaProvider>
   );
 }
 

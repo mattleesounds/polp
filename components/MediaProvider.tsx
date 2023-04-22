@@ -1,9 +1,8 @@
 import React from "react";
 //import { TrackType } from "@/lib/types";
 import { useState, useRef, useEffect } from "react";
-import Feed from "./Feed";
-import ControlBar from "./ControlBar";
 import { Storage, Auth } from "aws-amplify";
+import MediaContext from "./MediaContext";
 
 interface TrackType {
   title: string; // The title of the track
@@ -11,8 +10,8 @@ interface TrackType {
   source: string; // The source URL or path of the audio file
 }
 
-interface MediaContents {
-  results: { key: string }[];
+interface MediaProviderProps {
+  children: React.ReactNode; // Specify the type for the children prop
 }
 
 // Function to get the artist name by sub ID
@@ -31,54 +30,19 @@ const getArtistNameBySubId = async (subId: string): Promise<string> => {
   }
 };
 
-const Media = (): JSX.Element => {
-  /* Tracks */
-  /* const tracks: TrackType[] = [
-    {
-      title: "50 Ways to Leave Your Lover",
-      artist: "Paul Simon",
-      source: "song1.mp3",
-    },
-    {
-      title: "So Fresh, So Clean",
-      artist: "Outkast",
-      source:
-        "https://YOUR_S3_BUCKET_NAME.s3.us-east-2.amazonaws.com/Outkast+-+So+Fresh%2C+So+Clean+(Official+HD+Video).mp3",
-    },
-    {
-      title: "Prelude in E Minor",
-      artist: "Chopin",
-      source: "song3.mp3",
-    },
-    {
-      title: "Giant Steps",
-      artist: "John Coltrane",
-      source: "song4.mp3",
-    },
-    {
-      title: "Set You Free",
-      artist: "The Black Keys",
-      source: "song5.mp3",
-    },
-    {
-      title: "Special Affair/Curse",
-      artist: "The Internet",
-      source: "song6.mp3",
-    },
-  ]; */
-
+const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   /* States */
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTrack, setCurrentTrack] = useState<string | null>(null);
+  const [trackDurations, setTrackDurations] = useState<Record<string, number>>(
+    {}
+  );
 
   /* Map of audioRefs */
-  const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
-  const durRefs = useRef<Map<string, number>>(new Map());
-
-  interface MediaContents {
-    results: { key: string }[];
-  }
+  /* const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const durRefs = useRef<Map<string, number>>(new Map()); */
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const fetchTracks = async () => {
@@ -125,56 +89,84 @@ const Media = (): JSX.Element => {
     fetchTracks();
   }, []);
 
+  // Update the audio element's source when the current track changes
+  useEffect(() => {
+    if (audioRef.current && currentTrack) {
+      audioRef.current.src = currentTrack;
+    }
+  }, [currentTrack]);
+
+  useEffect(() => {
+    if (audioRef.current && currentTrack) {
+      audioRef.current.src = currentTrack;
+      audioRef.current.onloadedmetadata = () => {
+        setTrackDurations((prevDurations) => ({
+          ...prevDurations,
+          [currentTrack]: audioRef.current!.duration,
+        }));
+      };
+    }
+  }, [currentTrack]);
+
   /* Play/Pause Function */
   const handlePlayPause = (trackSource: string) => {
+    // Get the audio element from the ref
+    const audioElement = audioRef.current;
+    if (!audioElement) return;
+
     if (currentTrack === trackSource) {
-      const audioElement = audioRefs.current.get(trackSource);
-      if (audioElement) {
-        if (audioElement.paused) {
-          audioElement.play();
-          setIsPlaying(true);
-        } else {
-          audioElement.pause();
-          setIsPlaying(false);
-        }
+      if (audioElement.paused) {
+        audioElement.play().catch((error) => {
+          console.error("Error playing audio:", error);
+        });
+        setIsPlaying(true);
+      } else {
+        audioElement.pause();
+        setIsPlaying(false);
       }
     } else {
-      audioRefs.current.forEach((audioElement) => {
-        audioElement.pause();
-      });
-      const audioElement = audioRefs.current.get(trackSource);
-      if (audioElement) {
-        audioElement.play();
-        setIsPlaying(true);
-      }
+      // Pause the current audio
+      audioElement.pause();
+      // Set the new source
+      audioElement.src = trackSource;
+      // Update the current track
       setCurrentTrack(trackSource);
+      // Set isPlaying to true
+      setIsPlaying(true);
+      // Add an event listener for the canplaythrough event
+      const handleCanPlayThrough = () => {
+        audioElement.play().catch((error) => {
+          console.error("Error playing audio:", error);
+        });
+        // Remove the event listener after playback starts
+        audioElement.removeEventListener(
+          "canplaythrough",
+          handleCanPlayThrough
+        );
+      };
+      audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
+      // Load the new audio source
+      audioElement.load();
     }
   };
 
   return (
-    <div>
-      <Feed
-        tracks={tracks}
-        setIsPlaying={setIsPlaying}
-        isPlaying={isPlaying}
-        currentTrack={currentTrack}
-        setCurrentTrack={setCurrentTrack}
-        handlePlayPause={handlePlayPause}
-        audioRefs={audioRefs}
-        durRefs={durRefs}
-      />
-      <ControlBar
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        currentTrack={currentTrack}
-        audioRefs={audioRefs}
-        setCurrentTrack={setCurrentTrack}
-        durRefs={durRefs}
-        handlePlayPause={handlePlayPause}
-        tracks={tracks}
-      />
-    </div>
+    <MediaContext.Provider
+      value={{
+        isPlaying,
+        setIsPlaying,
+        currentTrack,
+        setCurrentTrack,
+        handlePlayPause,
+        tracks,
+        trackDurations,
+        audioElement: audioRef.current,
+      }}
+    >
+      {children}
+      <audio ref={audioRef} />
+    </MediaContext.Provider>
   );
 };
 
-export default Media;
+export default MediaProvider;

@@ -1,48 +1,27 @@
-import React, { use } from "react";
-import { useState, useRef, useEffect, createRef } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { GiPauseButton, GiPlayButton } from "react-icons/gi";
 import { BsFillSkipEndFill, BsFillSkipStartFill } from "react-icons/bs";
 import { TrackType } from "@/lib/types";
 import { BiPlay, BiPause, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import { useContext } from "react";
+import MediaContext from "./MediaContext";
 
 interface Props {}
 
-interface AudioRef {
-  current: HTMLAudioElement | null;
-  currentTime: number;
-}
+const ControlBar = (): JSX.Element => {
+  const {
+    isPlaying,
+    setIsPlaying,
+    currentTrack,
+    setCurrentTrack,
+    handlePlayPause,
+    tracks,
+    trackDurations,
+    audioElement, // Get the audio element instance from the context
+  } = useContext(MediaContext);
 
-interface KnobRef extends HTMLDivElement {
-  current: HTMLDivElement | null;
-  parentElement: HTMLElement | null;
-}
-
-interface Props {
-  isPlaying: boolean;
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  currentTrack: string | null;
-  audioRefs: React.MutableRefObject<Map<string, HTMLAudioElement>>;
-  setCurrentTrack: React.Dispatch<React.SetStateAction<any>>;
-  durRefs: React.MutableRefObject<Map<string, number>>;
-  handlePlayPause: (trackSource: string) => void;
-  tracks: TrackType[];
-}
-
-const ControlBar = ({
-  isPlaying,
-  setIsPlaying,
-  currentTrack,
-  setCurrentTrack,
-  audioRefs,
-  durRefs,
-  handlePlayPause,
-  tracks,
-}: Props): JSX.Element => {
   const [progress, setProgress] = useState(0);
-  //const audioRef = useRef<HTMLAudioElement>(null);
-  /* const knobRef = useRef<KnobRef>({ current: null, parentElement: null }); */
-  const knobRef = createRef<KnobRef>();
-  const audioRefsArray = Array.from(audioRefs.current);
   const track = tracks.find((track) => track.source === currentTrack);
 
   const [progressMinSec, setProgressMinSec] = useState("");
@@ -50,49 +29,41 @@ const ControlBar = ({
 
   // Progress Bar Hook
   useEffect(() => {
-    if (!currentTrack) return;
-
-    const audio = audioRefs.current.get(currentTrack);
-    if (!audio) return;
+    if (!audioElement || !currentTrack) return;
 
     const updateProgress = () => {
-      setProgress((audio.currentTime / audio.duration) * 100);
+      setProgress((audioElement.currentTime / audioElement.duration) * 100);
     };
 
-    audio.addEventListener("timeupdate", updateProgress);
+    audioElement.addEventListener("timeupdate", updateProgress);
 
     return () => {
-      audio.removeEventListener("timeupdate", updateProgress);
+      audioElement.removeEventListener("timeupdate", updateProgress);
     };
-  }, [currentTrack, audioRefs, durRefs]);
+  }, [currentTrack, audioElement]);
 
   // Duration and Progress Hook
   useEffect(() => {
-    if (!currentTrack) return;
+    if (!audioElement || !currentTrack) return;
 
-    const audio = audioRefs.current.get(currentTrack);
-    if (!audio) return;
-
-    const durationMinutes = Math.floor(audio.duration / 60);
-    const durationSeconds = Math.floor(audio.duration % 60);
+    const duration = trackDurations[currentTrack] || 0;
+    const durationMinutes = Math.floor(duration / 60);
+    const durationSeconds = Math.floor(duration % 60);
     setDurationMinSec(
       `${durationMinutes}:${durationSeconds.toString().padStart(2, "0")}`
     );
 
-    const progressMinutes = Math.floor(audio.currentTime / 60);
-    const progressSeconds = Math.floor(audio.currentTime % 60);
+    const progressMinutes = Math.floor(audioElement.currentTime / 60);
+    const progressSeconds = Math.floor(audioElement.currentTime % 60);
     setProgressMinSec(
       `${progressMinutes}:${progressSeconds.toString().padStart(2, "0")}`
     );
-  }, [currentTrack, audioRefs, progress, durationMinSec, progressMinSec]);
+  }, [currentTrack, audioElement, progress, trackDurations]);
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (!currentTrack) return;
-
-    const audio = audioRefs.current.get(currentTrack);
-    if (!audio) return;
+    if (!audioElement || !currentTrack) return;
 
     const progressBar = event.currentTarget;
     const mouseX = event.clientX;
@@ -100,56 +71,45 @@ const ControlBar = ({
     const progress = (mouseX - rect.left) / rect.width;
 
     // Ensure that the calculated time is a valid finite number
-    const newTime = progress * audio.duration;
+    const newTime = progress * audioElement.duration;
     if (Number.isFinite(newTime)) {
-      audio.currentTime = newTime;
+      audioElement.currentTime = newTime;
     }
   };
 
-  const handlePrevious = (trackSource: string) => {
-    const audio = audioRefs.current.get(trackSource);
-    if (!audio) return;
+  const handlePrevious = () => {
+    if (!audioElement || !currentTrack) return;
 
-    if (audio.currentTime > 1) {
-      audio.currentTime = 0;
+    if (audioElement.currentTime > 1) {
+      audioElement.currentTime = 0;
     } else {
-      const currentIndex = audioRefsArray.findIndex(
-        (ref) => ref[0] === trackSource
+      const currentIndex = tracks.findIndex(
+        (track) => track.source === currentTrack
       );
       if (currentIndex === 0) return;
 
-      const previousTrack = audioRefsArray[currentIndex - 1]?.[0];
-      console.log("previous track: ", previousTrack);
+      const previousTrack = tracks[currentIndex - 1]?.source;
       setCurrentTrack(previousTrack);
-      audioRefs.current.forEach((audioElement) => {
-        audioElement.pause();
-      });
+      audioElement.pause();
       handlePlayPause(previousTrack);
-      audio.currentTime = 0;
+      audioElement.currentTime = 0;
     }
   };
 
-  const handleNext = (trackSource: string) => {
-    const audio = audioRefs.current.get(trackSource);
-    if (!audio) return;
-    const currentIndex = audioRefsArray.findIndex(
-      (ref) => ref[0] === trackSource
+  const handleNext = () => {
+    if (!audioElement || !currentTrack) return;
+
+    const currentIndex = tracks.findIndex(
+      (track) => track.source === currentTrack
     );
-    if (currentIndex === 0) return;
+    if (currentIndex === tracks.length - 1) return;
 
-    const nextTrack = audioRefsArray[currentIndex + 1]?.[0];
-    console.log("next track: ", nextTrack);
+    const nextTrack = tracks[currentIndex + 1]?.source;
     setCurrentTrack(nextTrack);
-    audioRefs.current.forEach((audioElement) => {
-      audioElement.pause();
-    });
+    audioElement.pause();
     handlePlayPause(nextTrack);
-    audio.currentTime = 0;
+    audioElement.currentTime = 0;
   };
-
-  if (!track) {
-    return <></>;
-  }
 
   return (
     <div className="fixed bottom-0 m-0 h-16 w-full bg-white p-0 leading-none">
@@ -163,13 +123,9 @@ const ControlBar = ({
             <h3 className="pl-2">{currentTrack ? track!.title : ""}</h3>
           </div>
         </div>
-
         {/* Controls */}
         <div className="max-w-1/2 relative top-0 m-0 bg-white p-0">
-          <button
-            className="relative"
-            onClick={() => handlePrevious(currentTrack!)}
-          >
+          <button className="relative" onClick={handlePrevious}>
             <BiSkipPrevious size={50} />
           </button>
 
@@ -184,15 +140,10 @@ const ControlBar = ({
             )}
           </button>
 
-          <button
-            className="relative top-0"
-            onClick={() => handleNext(currentTrack!)}
-          >
+          <button className="relative top-0" onClick={handleNext}>
             <BiSkipNext size={50} />
           </button>
         </div>
-        {/*  <div className="absolute max-w-1/2 m-0 p-0 bg-white top-0">
-        </div> */}
 
         {/* progress */}
         <div className="absolute right-5 top-[15px]">
@@ -210,9 +161,6 @@ const ControlBar = ({
           style={{ width: `${progress}%` }}
         ></div>
       </div>
-
-      {/* Knob */}
-      {/* <div ref={knobRef} className="" onMouseDown={handleKnobMouseDown}></div> */}
     </div>
   );
 };

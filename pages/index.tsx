@@ -2,9 +2,12 @@ import Head from "next/head";
 import { Inter } from "@next/font/google";
 import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
-import Media from "@/components/Media";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
+import MediaContext from "@/components/MediaContext";
+import { useContext } from "react";
+import Feed from "@/components/Feed";
+import ControlBar from "@/components/ControlBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +25,8 @@ export default function Home() {
       <main className="h-screen bg-cream">
         <NavBar />
         <PageTitle />
-        <Media />
+        <Feed />
+        <ControlBar />
       </main>
     </>
   );
