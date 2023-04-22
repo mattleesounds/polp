@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Storage } from "aws-amplify";
 import { Auth } from "aws-amplify";
-
+import ControlBar from "./ControlBar";
 interface Metadata {
   title: string;
   sub: string;
@@ -170,6 +170,7 @@ const Upload = () => {
       >
         upload track
       </button>
+      <ControlBar />
     </div>
   );
 };
