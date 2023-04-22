@@ -18,24 +18,30 @@ const Track = ({ track }: TrackProps): JSX.Element => {
     currentTrack,
     setCurrentTrack,
     handlePlayPause,
-    audioRefs,
-    durRefs,
+    trackDurations,
   } = useContext(MediaContext);
 
   /* States */
-  const [duration, setDuration] = useState(0);
-
+  /* const [duration, setDuration] = useState(0);
+   */
   /* Ref */
-  const audioRef = useRef<HTMLAudioElement>(null);
+  /* const audioRef = useRef<HTMLAudioElement>(null); */
 
   /* Set audioRef in Map */
-  useEffect(() => {
+  /* useEffect(() => {
     if (audioRef.current) {
       audioRefs.current.set(track.source, audioRef.current);
       setDuration(audioRef.current.duration);
       durRefs.current.set(track.source, duration);
     }
-  }, [audioRefs, track.source, durRefs, duration]);
+  }, [audioRefs, track.source, durRefs, duration]); */
+
+  const duration = trackDurations[track.source] || 0;
+  const durationMinutes = Math.floor(duration / 60);
+  const durationSeconds = Math.floor(duration % 60);
+  const durationDisplay = `${durationMinutes}:${durationSeconds
+    .toString()
+    .padStart(2, "0")}`;
 
   return (
     <div className="left-[6%] m-3 flex h-36 w-[88%] bg-white">
@@ -51,16 +57,13 @@ const Track = ({ track }: TrackProps): JSX.Element => {
       </div>
 
       {/* Audio */}
-      <audio ref={audioRef} src={track.source} />
 
       {/* Info/Progress */}
       <div className="h-full w-[70%] flex-col">
         <div className="h-[60%]">
           <h2 className="p-2 text-xl">{track.title}</h2>
           <h3 className="p-2 pt-0 pb-1 text-lg">{track.artist}</h3>
-          <h4 className="p-2 pt-0 pb-1 text-polp-orange">
-            {Math.floor(duration / 60)}:{Math.floor(duration % 60)}
-          </h4>
+          <h4 className="p-2 pt-0 pb-1 text-polp-orange">{durationDisplay}</h4>
         </div>
         <div className="mr-6 mt-0 flex h-[40%] justify-end">
           <button className="ml-[25px] flex h-12 w-24 place-content-center items-center border-2 border-solid border-polp-orange bg-cream">

@@ -1,8 +1,6 @@
 import React from "react";
 //import { TrackType } from "@/lib/types";
 import { useState, useRef, useEffect } from "react";
-import Feed from "./Feed";
-import ControlBar from "./ControlBar";
 import { Storage, Auth } from "aws-amplify";
 import MediaContext from "./MediaContext";
 
@@ -37,10 +35,14 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTrack, setCurrentTrack] = useState<string | null>(null);
+  const [trackDurations, setTrackDurations] = useState<Record<string, number>>(
+    {}
+  );
 
   /* Map of audioRefs */
-  const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
-  const durRefs = useRef<Map<string, number>>(new Map());
+  /* const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const durRefs = useRef<Map<string, number>>(new Map()); */
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const fetchTracks = async () => {
@@ -87,29 +89,64 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     fetchTracks();
   }, []);
 
+  // Update the audio element's source when the current track changes
+  useEffect(() => {
+    if (audioRef.current && currentTrack) {
+      audioRef.current.src = currentTrack;
+    }
+  }, [currentTrack]);
+
+  useEffect(() => {
+    if (audioRef.current && currentTrack) {
+      audioRef.current.src = currentTrack;
+      audioRef.current.onloadedmetadata = () => {
+        setTrackDurations((prevDurations) => ({
+          ...prevDurations,
+          [currentTrack]: audioRef.current!.duration,
+        }));
+      };
+    }
+  }, [currentTrack]);
+
   /* Play/Pause Function */
   const handlePlayPause = (trackSource: string) => {
+    // Get the audio element from the ref
+    const audioElement = audioRef.current;
+    if (!audioElement) return;
+
     if (currentTrack === trackSource) {
-      const audioElement = audioRefs.current.get(trackSource);
-      if (audioElement) {
-        if (audioElement.paused) {
-          audioElement.play();
-          setIsPlaying(true);
-        } else {
-          audioElement.pause();
-          setIsPlaying(false);
-        }
+      if (audioElement.paused) {
+        audioElement.play().catch((error) => {
+          console.error("Error playing audio:", error);
+        });
+        setIsPlaying(true);
+      } else {
+        audioElement.pause();
+        setIsPlaying(false);
       }
     } else {
-      audioRefs.current.forEach((audioElement) => {
-        audioElement.pause();
-      });
-      const audioElement = audioRefs.current.get(trackSource);
-      if (audioElement) {
-        audioElement.play();
-        setIsPlaying(true);
-      }
+      // Pause the current audio
+      audioElement.pause();
+      // Set the new source
+      audioElement.src = trackSource;
+      // Update the current track
       setCurrentTrack(trackSource);
+      // Set isPlaying to true
+      setIsPlaying(true);
+      // Add an event listener for the canplaythrough event
+      const handleCanPlayThrough = () => {
+        audioElement.play().catch((error) => {
+          console.error("Error playing audio:", error);
+        });
+        // Remove the event listener after playback starts
+        audioElement.removeEventListener(
+          "canplaythrough",
+          handleCanPlayThrough
+        );
+      };
+      audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
+      // Load the new audio source
+      audioElement.load();
     }
   };
 
@@ -122,11 +159,12 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         setCurrentTrack,
         handlePlayPause,
         tracks,
-        audioRefs,
-        durRefs,
+        trackDurations,
+        audioElement: audioRef.current,
       }}
     >
       {children}
+      <audio ref={audioRef} />
     </MediaContext.Provider>
   );
 };
