@@ -17,6 +17,9 @@ Amplify.configure(awsExports);
 Auth.configure(awsExports);
 Storage.configure(awsExports);
 
+console.log("Redirect Sign In:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_IN);
+console.log("Redirect Sign Out:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_OUT);
+
 function App({ Component, pageProps }: AppProps) {
   const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
 
