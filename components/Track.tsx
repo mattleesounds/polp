@@ -48,18 +48,13 @@ const Track = ({ track }: TrackProps): JSX.Element => {
         <div className="h-[62px]">
           <h2 className="p-0 pt-2 text-xl">{track.title}</h2>
           <h3 className="p-0 pt-0 pb-1 text-lg">{track.artist}</h3>
-          <h4 className="p-0 pt-0 pb-1 text-polp-black">{durationDisplay}</h4>
+          <h4 className="p-1 pt-0 pb-1 text-polp-black">{durationDisplay}</h4>
         </div>
-        <div className="mr-5 mt-1 flex h-[120px] justify-end">
-          <button className="mb-2 mr-3 flex h-12 w-12 place-content-center items-center rounded-lg border-2 border-solid border-polp-black bg-polp-grey p-2 text-sm">
-            <Image
-              alt="collect track"
-              src="/share.png"
-              width={20}
-              height={20}
-            />
+        <div className="mr-4 mt-1 flex h-[120px] justify-end">
+          <button className="mb-2 mr-4 flex h-[42px] w-[42px] place-content-center items-center rounded-lg border-2 border-solid border-polp-black bg-polp-grey p-2 text-sm">
+            <Image alt="share track" src="/share.png" width={20} height={20} />
           </button>
-          <button className="flex h-12 w-12 place-content-center items-center rounded-lg border-2 border-solid border-black bg-black p-2 text-sm">
+          <button className="w-[42px]place-content-center flex h-[42px] items-center rounded-lg border-2 border-solid border-black bg-black p-2 text-sm">
             <Image alt="collect track" src="/plus.png" width={20} height={20} />
           </button>
         </div>
