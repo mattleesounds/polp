@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { Storage } from "aws-amplify";
 import { Auth } from "aws-amplify";
 import ControlBar from "./ControlBar";
-interface Metadata {
-  title: string;
-  sub: string;
-  artist: string;
-  description?: string;
-}
+import { v4 as uuidv4 } from "uuid"; // Import the uuidv4 function
 
 const uploadFile = async (
   file: File,
@@ -22,7 +17,6 @@ const uploadFile = async (
     contentType: file.type,
     metadata,
   });
-
   return key;
 };
 
@@ -33,19 +27,17 @@ const uploadImage = async (image: File, path: string): Promise<string> => {
   const { key } = await Storage.put(path + image.name, image, {
     contentType: image.type,
   });
-
   return key;
 };
 
 const uploadMetadata = async (metadata: any, path: string): Promise<string> => {
   const { key } = await Storage.put(
-    path + "metadata.json",
+    path + "description.json",
     JSON.stringify(metadata),
     {
       contentType: "application/json",
     }
   );
-
   return key;
 };
 
@@ -54,6 +46,7 @@ const Upload = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [color, setColor] = useState(""); // Add state for color
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
@@ -68,7 +61,6 @@ const Upload = () => {
       setImage(selectedFile);
     }
   };
-
   const handleUpload = async () => {
     if (!file) return;
 
@@ -88,21 +80,21 @@ const Upload = () => {
         return;
       }
 
+      // Generate a unique track ID using uuidv4
+      const trackId = uuidv4();
+
       // Create the folder structure
-      const subId = currentUser.attributes.sub;
-      const folderPath = `media/${subId}_${title}/`;
+      const folderPath = `media/${trackId}/`; // Use trackId as the folder name
       const metadataFolderPath = folderPath + "metadata/";
 
       // Metadata for the audio file
-      // Metadata for the audio file
-      const metadata: Metadata = {
+      const metadata = {
         title: title,
-        sub: subId.toString(),
-        artist: currentUser.username,
+        "artist-name": currentUser.attributes["custom:Name"],
+        "artist-sub-id": currentUser.attributes.sub,
+        color: color, // Add color to metadata
+        trackId: trackId, // Add trackId to metadata
       };
-      if (description) {
-        metadata.description = description;
-      }
 
       // Upload audio file with metadata
       const uploadedFileKey = await uploadFile(file, metadata, folderPath);
@@ -113,13 +105,15 @@ const Upload = () => {
         const uploadedImageKey = await uploadImage(image, metadataFolderPath);
         console.log("Image uploaded:", uploadedImageKey);
       }
-
-      // Upload metadata as JSON file
-      const uploadedMetadataKey = await uploadMetadata(
-        metadata,
-        metadataFolderPath
-      );
-      console.log("Metadata uploaded:", uploadedMetadataKey);
+      // Upload description as JSON file
+      if (description) {
+        const descriptionMetadata = { description: description };
+        const uploadedMetadataKey = await uploadMetadata(
+          descriptionMetadata,
+          metadataFolderPath
+        );
+        console.log("Metadata uploaded:", uploadedMetadataKey);
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.error("File or image upload failed:", error.message);
@@ -163,6 +157,19 @@ const Upload = () => {
         onChange={handleImageChange}
         className="mb-8 bg-white"
       />
+      <br />
+      <h2 className="text-lg text-polp-black">Select color</h2>
+      <select
+        value={color}
+        onChange={(e) => setColor(e.target.value)}
+        className="mb-4 bg-white"
+      >
+        <option value="">Select color</option>
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+        {/* Add more colors as needed */}
+      </select>
       <br />
       <button
         onClick={handleUpload}

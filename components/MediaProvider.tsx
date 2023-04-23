@@ -1,13 +1,19 @@
 import React from "react";
 //import { TrackType } from "@/lib/types";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Storage, Auth } from "aws-amplify";
 import MediaContext from "./MediaContext";
+import { v4 as uuidv4 } from "uuid";
+import AWS from "aws-sdk";
+import awsExports from "../src/aws-exports.js";
+import { S3Client, HeadObjectCommand } from "@aws-sdk/client-s3";
 
 interface TrackType {
   title: string; // The title of the track
   artist: string; // The name of the artist
-  source: string; // The source URL or path of the audio file
+  source: string; // The source URL or path of the audio ile
+  trackId: string; // The ID of the track
+  color: string; // The color of the track
 }
 
 interface MediaProviderProps {
@@ -30,6 +36,21 @@ const getArtistNameBySubId = async (subId: string): Promise<string> => {
   }
 };
 
+/* const getMetadata = async (trackId: string, audioFileName: string) => {
+  const s3 = new S3(); // Create an instance of the S3 client
+  const params = {
+    Bucket: "YOUR_S3_BUCKET_NAME124813-dev", // Replace with your bucket name
+    Key: `media/${trackId}/${audioFileName}`, // Use the correct key
+  };
+  try {
+    const data = await s3.headObject(params).promise();
+    return data.Metadata || {};
+  } catch (error) {
+    console.error("Error retrieving metadata:", error);
+    return {};
+  }
+}; */
+
 const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   /* States */
   const [tracks, setTracks] = useState<TrackType[]>([]);
@@ -39,55 +60,67 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     {}
   );
 
-  /* Map of audioRefs */
-  /* const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
-  const durRefs = useRef<Map<string, number>>(new Map()); */
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  useEffect(() => {
-    const fetchTracks = async () => {
-      try {
-        // List items in the "public/media/" folder
-        const listResult = await Storage.list("media", { level: "public" });
-        const results = (listResult.results || []) as { key: string }[];
+  // Create an S3 client instance
 
-        // Filter the items to include only audio files
-        const audioFiles = results.filter(
-          (item) => item.key.endsWith(".mp3") || item.key.endsWith(".wav")
-        );
+  const fetchTracks = useCallback(async () => {
+    // Retrieve the current user's credentials from Amplify
+    const credentials = await Auth.currentCredentials();
 
-        console.log("Audio files:", audioFiles);
+    // Create an S3 client using the AWS SDK v3
+    const s3Client = new S3Client({
+      region: "us-east-2", // Update this to your desired region
+      credentials: credentials,
+    });
 
-        // Iterate over each audio file to retrieve metadata
-        const trackPromises = audioFiles.map(async (audioFile) => {
-          const fileKey = audioFile.key;
+    try {
+      const listResult = await Storage.list("media/");
+      const audioFiles = listResult.results.filter((item) => {
+        const key = item.key || "";
+        return key.endsWith(".mp3") || key.endsWith(".wav");
+      });
 
-          // Extract metadata from the file key
-          const folderName = fileKey.split("/").slice(-2, -1)[0] || "";
-          const subId = folderName.split("_")[0];
-          const title = folderName.split("_")[1];
-          const artist = await getArtistNameBySubId(subId);
+      console.log("Audio files:", audioFiles);
 
-          const fileUrl = await Storage.get(fileKey, { level: "public" });
+      const trackPromises = audioFiles.map(async (item) => {
+        const fileKey = item.key || "";
+        const trackId = fileKey.split("/")[1];
 
-          return {
-            title: title,
-            artist: artist,
-            source: fileUrl as string,
-          };
+        const headObjectCommand = new HeadObjectCommand({
+          Bucket: awsExports.aws_user_files_s3_bucket,
+          Key: "public/" + fileKey,
         });
-        console.log("results", results);
+        const metadataResponse = await s3Client.send(headObjectCommand);
+        console.log("Metadata response for file:", fileKey, metadataResponse);
 
-        const trackList = (await Promise.all(trackPromises)).filter(
-          (track) => track !== null
-        ) as TrackType[];
-        setTracks(trackList);
-      } catch (error) {
-        console.error("Failed to fetch tracks:", error);
-      }
-    };
+        const metadata = metadataResponse.Metadata;
+        const title = metadata ? metadata["x-amz-meta-title"] : "";
+        const artist = metadata ? metadata["x-amz-meta-artist-name"] : "";
+        const color = metadata ? metadata["x-amz-meta-color"] : "";
+
+        const fileUrl = await Storage.get(fileKey);
+
+        return {
+          title: title,
+          artist: artist,
+          source: fileUrl as string,
+          color: color,
+          trackId: trackId,
+        };
+      });
+
+      const trackList = await Promise.all(trackPromises);
+      console.log("Track list:", trackList);
+      setTracks(trackList);
+    } catch (error) {
+      console.error("Failed to fetch tracks:", error);
+    }
+  }, []); // Define any dependencies for fetchTracks here
+
+  useEffect(() => {
     fetchTracks();
-  }, []);
+  }, [fetchTracks]); // Include fetchTracks in the dependency array
 
   // Update the audio element's source when the current track changes
   useEffect(() => {

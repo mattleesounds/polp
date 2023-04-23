@@ -1,6 +1,6 @@
 import React from "react";
 import Track from "./Track";
-import { TrackType } from "@/lib/types";
+//import { TrackType } from "@/lib/types";
 import MediaContext from "./MediaContext";
 import { useContext } from "react";
 
