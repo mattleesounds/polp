@@ -21,21 +21,6 @@ const Track = ({ track }: TrackProps): JSX.Element => {
     trackDurations,
   } = useContext(MediaContext);
 
-  /* States */
-  /* const [duration, setDuration] = useState(0);
-   */
-  /* Ref */
-  /* const audioRef = useRef<HTMLAudioElement>(null); */
-
-  /* Set audioRef in Map */
-  /* useEffect(() => {
-    if (audioRef.current) {
-      audioRefs.current.set(track.source, audioRef.current);
-      setDuration(audioRef.current.duration);
-      durRefs.current.set(track.source, duration);
-    }
-  }, [audioRefs, track.source, durRefs, duration]); */
-
   const duration = trackDurations[track.source] || 0;
   const durationMinutes = Math.floor(duration / 60);
   const durationSeconds = Math.floor(duration % 60);
@@ -44,9 +29,9 @@ const Track = ({ track }: TrackProps): JSX.Element => {
     .padStart(2, "0")}`;
 
   return (
-    <div className="left-[6%] m-3 flex h-36 w-[88%] bg-white">
+    <div className=" m-3 flex h-32 w-[300px] rounded-lg bg-polp-white">
       {/* Art/Controls */}
-      <div className="flex h-[69%] w-[30%] items-center justify-center bg-slate-400">
+      <div className="m-3 flex h-[100px] w-[100px] items-center justify-center bg-slate-400 align-middle">
         <button onClick={() => handlePlayPause(track.source)}>
           {isPlaying && track.source === currentTrack ? (
             <BiPause size={60} />
@@ -59,16 +44,23 @@ const Track = ({ track }: TrackProps): JSX.Element => {
       {/* Audio */}
 
       {/* Info/Progress */}
-      <div className="h-full w-[70%] flex-col">
-        <div className="h-[60%]">
-          <h2 className="p-2 text-xl">{track.title}</h2>
-          <h3 className="p-2 pt-0 pb-1 text-lg">{track.artist}</h3>
-          <h4 className="p-2 pt-0 pb-1 text-polp-orange">{durationDisplay}</h4>
+      <div className="h-full w-[175px] flex-col">
+        <div className="h-[62px]">
+          <h2 className="p-0 pt-2 text-xl">{track.title}</h2>
+          <h3 className="p-0 pt-0 pb-1 text-lg">{track.artist}</h3>
+          <h4 className="p-0 pt-0 pb-1 text-polp-black">{durationDisplay}</h4>
         </div>
-        <div className="mr-6 mt-0 flex h-[40%] justify-end">
-          <button className="ml-[25px] flex h-12 w-24 place-content-center items-center border-2 border-solid border-polp-orange bg-cream">
-            <p className="m-1">Share</p>
-            <IoMdShareAlt size={20} className="m-1" />
+        <div className="mr-5 mt-1 flex h-[120px] justify-end">
+          <button className="mb-2 mr-3 flex h-12 w-12 place-content-center items-center rounded-lg border-2 border-solid border-polp-black bg-polp-grey p-2 text-sm">
+            <Image
+              alt="collect track"
+              src="/share.png"
+              width={20}
+              height={20}
+            />
+          </button>
+          <button className="flex h-12 w-12 place-content-center items-center rounded-lg border-2 border-solid border-black bg-black p-2 text-sm">
+            <Image alt="collect track" src="/plus.png" width={20} height={20} />
           </button>
         </div>
       </div>

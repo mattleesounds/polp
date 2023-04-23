@@ -153,11 +153,11 @@ const ControlBar = (): JSX.Element => {
 
       {/* Progress Bar */}
       <div
-        className="absolute left-[5%] bottom-2 h-[6px] w-[90%] cursor-pointer bg-cream"
+        className="absolute left-[5%] bottom-2 h-[6px] w-[90%] cursor-pointer rounded-lg bg-polp-grey"
         onMouseDown={handleMouseDown}
       >
         <div
-          className="h-full bg-black"
+          className="h-full rounded-lg bg-black"
           style={{ width: `${progress}%` }}
         ></div>
       </div>

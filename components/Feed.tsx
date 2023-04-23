@@ -8,7 +8,7 @@ const Feed = (): JSX.Element => {
   const { tracks } = useContext(MediaContext);
 
   return (
-    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-cream pb-24">
+    <div className="z-0 m-2 mb-2 flex h-full flex-col place-items-center bg-polp-grey pb-24">
       {tracks.map((track) => (
         <Track key={track.title} track={track} />
       ))}

@@ -34,12 +34,12 @@ const NavBar = () => {
         </div>
 
         {/* search bar */}
-        <div className="w-half absolute top-1/2 left-1/2 z-20 h-full -translate-x-1/2 -translate-y-1/2 transform items-center">
+        {/* <div className="w-half absolute top-1/2 left-1/2 z-20 h-full -translate-x-1/2 -translate-y-1/2 transform items-center">
           <input
-            className="w-full translate-y-5 bg-cream"
+            className="w-full translate-y-5 bg-polp-grey p-1"
             placeholder="search..."
           />
-        </div>
+        </div> */}
 
         {/* Menu */}
         <div className="m-0 flex h-full w-[90px] ">
@@ -53,19 +53,19 @@ const NavBar = () => {
             <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg md:w-[235px]">
               <ul>
                 <Link href={"/"} className="w-full">
-                  <li className="p-2 hover:bg-cream">feed</li>
+                  <li className="p-2 hover:bg-polp-grey">feed</li>
                 </Link>
                 <Link href="/profile" className="w-full">
-                  <li className="p-2 hover:bg-cream">profile</li>
+                  <li className="p-2 hover:bg-polp-grey">profile</li>
                 </Link>
                 <Link href="/">
-                  <li className="p-2 hover:bg-cream">community</li>
+                  <li className="p-2 hover:bg-polp-grey">community</li>
                 </Link>
                 <Link href="/uploadPage">
-                  <li className="p-2 hover:bg-cream">upload music</li>
+                  <li className="p-2 hover:bg-polp-grey">upload music</li>
                 </Link>
                 <button onClick={handleSignOut}>
-                  <li className="p-2 hover:bg-cream">sign out</li>
+                  <li className="p-2 hover:bg-polp-grey">sign out</li>
                 </button>
               </ul>
             </div>

@@ -131,13 +131,13 @@ const Upload = () => {
   };
 
   return (
-    <div className="flex-col content-center justify-center text-center ">
+    <div className="flex-col content-center justify-center text-center">
       <input
         type="text"
         placeholder="Track title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="mb-4 w-72 p-1"
+        className="mb-4 w-72 p-1 "
       />
       <br />
       <textarea
@@ -145,10 +145,10 @@ const Upload = () => {
         placeholder="Track description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="mb-4 w-72 p-1"
+        className="mb-4 w-72 p-1 "
       />
       <br />
-      <h2 className="text-lg text-polp-orange">audio file</h2>
+      <h2 className="text-lg text-polp-black">audio file</h2>
       <input
         type="file"
         accept="audio/*"
@@ -156,7 +156,7 @@ const Upload = () => {
         className="mb-4 bg-white"
       />
       <br />
-      <h2 className="text-lg text-polp-orange">cover image file</h2>
+      <h2 className="text-lg text-polp-black">cover image file</h2>
       <input
         type="file"
         accept="image/*"
@@ -166,7 +166,7 @@ const Upload = () => {
       <br />
       <button
         onClick={handleUpload}
-        className="h-8 w-32 rounded-lg bg-polp-orange"
+        className="h-8 w-32 rounded-lg bg-polp-black text-white"
       >
         upload track
       </button>

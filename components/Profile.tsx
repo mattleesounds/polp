@@ -128,10 +128,10 @@ const Profile = (): JSX.Element => {
   /* userProfile?.profilePicture ||  */
 
   return (
-    <div className="container mx-auto">
-      <div className="my-12 flex flex-col items-center">
-        <h1 className="mb-6 mt-8 text-4xl">Profile</h1>
-        <div className="w-full rounded-md border border-gray-300 p-6 sm:w-96">
+    <div className="container mx-auto min-h-[900px] bg-polp-grey">
+      <div className="my-12 flex flex-col items-center justify-center">
+        <h1 className="mb-6 mt-8 text-4xl">{userProfile?.name}</h1>
+        <div className="w-[300px] flex-col content-center items-center justify-center rounded-md border p-6 text-center sm:w-[500px] sm:w-96">
           <div className="h-full">
             <img
               src={userProfile?.profilePicture || "/logo.png"}
@@ -144,10 +144,6 @@ const Profile = (): JSX.Element => {
           </div>
           {!editMode && (
             <div>
-              <div className="mt-6">
-                <h2 className="text-xl font-semibold">Name</h2>
-                <p className="text-gray-700">{userProfile?.name}</p>
-              </div>
               <div className="mt-4">
                 <h2 className="text-xl font-semibold">Email</h2>
                 <p className="text-gray-700">{userProfile?.email}</p>
@@ -210,7 +206,7 @@ const Profile = (): JSX.Element => {
               {/* Add more input fields here as needed */}
               <button
                 type="submit"
-                className="mt-4 w-full rounded-md bg-blue-600 p-2 text-white"
+                className="mt-4 w-full rounded-md bg-polp-black p-2 text-white"
                 onClick={handleSubmit}
               >
                 Save Changes
@@ -219,7 +215,7 @@ const Profile = (): JSX.Element => {
           )}
           <button
             onClick={() => setEditMode(!editMode)}
-            className="mt-4 w-full rounded-md bg-blue-600 p-2 text-white"
+            className="mt-4 w-[200px] rounded-md bg-polp-black p-2 text-white"
           >
             {editMode ? "Cancel" : "Edit Profile"}
           </button>
