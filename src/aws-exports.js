@@ -13,6 +13,7 @@ const awsmobile = {
         "redirectSignIn": process.env.NEXT_PUBLIC_REDIRECT_SIGN_IN,
         "redirectSignOut": process.env.NEXT_PUBLIC_REDIRECT_SIGN_OUT,
         "responseType": 'code', // or 'token'
+        "googleClientId": "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
       },
     "aws_cognito_username_attributes": [
         "EMAIL"

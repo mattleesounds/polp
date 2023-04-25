@@ -7,14 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import AWS from "aws-sdk";
 import awsExports from "../src/aws-exports.js";
 import { S3Client, HeadObjectCommand } from "@aws-sdk/client-s3";
-
-interface TrackType {
-  title: string; // The title of the track
-  artist: string; // The name of the artist
-  source: string; // The source URL or path of the audio ile
-  trackId: string; // The ID of the track
-  color: string; // The color of the track
-}
+import { TrackType } from "@/lib/types";
 
 interface MediaProviderProps {
   children: React.ReactNode; // Specify the type for the children prop
@@ -95,9 +88,13 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         console.log("Metadata response for file:", fileKey, metadataResponse);
 
         const metadata = metadataResponse.Metadata;
-        const title = metadata ? metadata["x-amz-meta-title"] : "";
-        const artist = metadata ? metadata["x-amz-meta-artist-name"] : "";
-        const color = metadata ? metadata["x-amz-meta-color"] : "";
+        const title = metadata ? metadata["title"] : "";
+        const artist = metadata ? metadata["artist-name"] : "";
+        const color = metadata ? metadata["color"] : "";
+
+        console.log("title:", title);
+        console.log("artist:", artist);
+        console.log("color:", color);
 
         const fileUrl = await Storage.get(fileKey);
 

@@ -3,6 +3,7 @@ import { Storage } from "aws-amplify";
 import { Auth } from "aws-amplify";
 import ControlBar from "./ControlBar";
 import { v4 as uuidv4 } from "uuid"; // Import the uuidv4 function
+import { Select, Option } from "@material-tailwind/react";
 
 const uploadFile = async (
   file: File,
@@ -126,6 +127,9 @@ const Upload = () => {
 
   return (
     <div className="flex-col content-center justify-center text-center">
+      <p className="pl-8 pr-8 pb-4">
+        Note: your name in your profile will be displayed as the artist name
+      </p>
       <input
         type="text"
         placeholder="Track title"
@@ -158,18 +162,30 @@ const Upload = () => {
         className="mb-8 bg-white"
       />
       <br />
-      <h2 className="text-lg text-polp-black">Select color</h2>
-      <select
-        value={color}
-        onChange={(e) => setColor(e.target.value)}
-        className="mb-4 bg-white"
-      >
-        <option value="">Select color</option>
-        <option value="red">Red</option>
-        <option value="blue">Blue</option>
-        <option value="green">Green</option>
-        {/* Add more colors as needed */}
-      </select>
+      <div className="flex justify-center">
+        <div className="w-72">
+          <h2 className="text-lg text-polp-black">select vibe</h2>
+          <Select
+            value={color}
+            onChange={(selectedColor) => {
+              if (selectedColor) {
+                setColor(selectedColor);
+              }
+            }}
+            className="mb-4 w-72 bg-white "
+            label="Select color"
+          >
+            <Option value="">select vibe</Option>
+            <Option value="red">Red</Option>
+            <Option value="blue">Blue</Option>
+            <Option value="green">Green</Option>
+            <Option value="yellow">Green</Option>
+            <Option value="purple">Green</Option>
+            <Option value="orange">Green</Option>
+            {/* Add more colors as needed */}
+          </Select>
+        </div>
+      </div>
       <br />
       <button
         onClick={handleUpload}
