@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { GiPauseButton, GiPlayButton } from "react-icons/gi";
 import { BsFillSkipEndFill, BsFillSkipStartFill } from "react-icons/bs";
-import { TrackType } from "@/lib/types";
 import { BiPlay, BiPause, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { useContext } from "react";
 import MediaContext from "./MediaContext";
