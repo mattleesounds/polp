@@ -3,6 +3,7 @@ import Upload from "@/components/Upload";
 import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
 import ControlBar from "@/components/ControlBar";
+import TrackMetadata from "@/components/TrackMetadata";
 
 const uploadPage = () => {
   return (
@@ -14,7 +15,6 @@ const uploadPage = () => {
           upload a track
         </h1>
         <Upload />
-        {/* <ControlBar /> */}
       </main>
     </div>
   );

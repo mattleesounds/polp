@@ -1,9 +1,14 @@
 import React from "react";
 import { Auth } from "aws-amplify";
+import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 import { Authenticator } from "@aws-amplify/ui-react";
 import Link from "next/link";
 
 const SignIn = () => {
+  const handleGoogleSignIn = () => {
+    Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google });
+  };
+
   return (
     <div className="m-16 justify-center text-center">
       <h1>Welcome to POLP </h1>
@@ -12,9 +17,16 @@ const SignIn = () => {
       <br />
       <button
         onClick={() => Auth.federatedSignIn()}
-        className="h-8 w-24 rounded-lg bg-[#010101] text-[#FDFDFD]"
+        className="mb-8 h-16 w-32 rounded-lg bg-[#010101] text-[#FDFDFD]"
       >
-        sign in
+        sign in with email
+      </button>
+      <br />
+      <button
+        onClick={handleGoogleSignIn}
+        className="mb-8 h-16 w-32 rounded-lg bg-[#010101] text-[#FDFDFD]"
+      >
+        sign in with google
       </button>
     </div>
   );
