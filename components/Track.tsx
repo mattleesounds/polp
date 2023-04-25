@@ -1,74 +1,115 @@
-import React from 'react'
-import { AiOutlinePause } from 'react-icons/ai'
-import Image from 'next/image'
-import {IoMdShareAlt } from 'react-icons/io'
-import { BiPlay, BiPause } from 'react-icons/bi'
-import { TrackType } from '@/lib/types'
-import { useRef, useState, useEffect } from 'react'
-
+import React from "react";
+import { AiOutlinePause } from "react-icons/ai";
+import Image from "next/image";
+import { IoMdShareAlt } from "react-icons/io";
+import { BiPlay, BiPause } from "react-icons/bi";
+//import { TrackType } from "@/lib/types";
+import { useRef, useState, useEffect, useContext } from "react";
+import MediaContext from "./MediaContext";
+import { Storage } from "aws-amplify";
+import { TrackType } from "./MediaContext";
 interface TrackProps {
-  setCurrentTrack: React.Dispatch<React.SetStateAction<any>>; 
-  isPlaying: boolean;
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   track: TrackType;
-  currentTrack: string | null;
-  handlePlayPause: (trackSource: string) => void;
-  audioRefs: React.MutableRefObject<Map<string, HTMLAudioElement>>;
-  durRefs: React.MutableRefObject<Map<string, number>>;
 }
 
-const Track = ({ isPlaying, setIsPlaying, track, handlePlayPause, audioRefs, currentTrack, setCurrentTrack, durRefs }: TrackProps): JSX.Element =>  {
-  
-  /* States */
-  const [duration, setDuration] = useState(0);
+const Track = ({ track }: TrackProps): JSX.Element => {
+  const {
+    isPlaying,
+    setIsPlaying,
+    currentTrack,
+    setCurrentTrack,
+    handlePlayPause,
+    trackDurations,
+  } = useContext(MediaContext);
 
-  /* Ref */
-  const audioRef = useRef<HTMLAudioElement>(null);
+  /* console.log("Track prop:", track); */
 
-  /* Set audioRef in Map */
+  const duration = trackDurations[track.source] || 0;
+  const durationMinutes = Math.floor(duration / 60);
+  const durationSeconds = Math.floor(duration % 60);
+  const durationDisplay = `${durationMinutes}:${durationSeconds
+    .toString()
+    .padStart(2, "0")}`;
+
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   useEffect(() => {
-    if (audioRef.current) {
-      audioRefs.current.set(track.source, audioRef.current);
-      setDuration(audioRef.current.duration);
-      durRefs.current.set(track.source, duration);
-    }
-  }, [audioRefs, track.source, durRefs, duration]);
+    const fetchImage = async () => {
+      const metadataFolderPath = `media/${track.trackId}/metadata/`;
+      const response = await Storage.list(metadataFolderPath);
+      const files = response.results || []; // Access the results property to get the array of files
+      console.log("Files:", files); // Log the value of files to the console
+      if (Array.isArray(files)) {
+        // Check if files is an array
+        const imageFile = files.find((file) => {
+          // Ensure that the key property is defined before using it
+          return (
+            file.key && (file.key.endsWith(".jpg") || file.key.endsWith(".png"))
+          );
+        });
+        if (imageFile && imageFile.key) {
+          // Ensure that the key property is defined before using it
+          const signedUrl = await Storage.get(imageFile.key);
+          console.log("Signed URL:", signedUrl); // Log the signed URL to the console
+          setImageUrl(signedUrl as string);
+        } else {
+          console.log("Image file not found:", imageFile); // Log if the image file is not found
+        }
+      } else {
+        console.error("Files is not an array:", files);
+      }
+    };
+    fetchImage();
+  }, [track.trackId]);
+  // ... (existing code)
+  console.log("imageUrl:", imageUrl);
 
   return (
-    <div className="w-[88%] left-[6%] h-36 bg-white flex m-3">
-      
+    <div className="m-3 flex h-32 w-[300px] rounded-lg bg-polp-white">
       {/* Art/Controls */}
-      <div className="w-[30%] h-[69%] bg-slate-400 flex justify-center items-center">
-        <button onClick={() =>handlePlayPause(track.source)}>
-          { isPlaying && track.source === currentTrack ? <BiPause size={60} /> : <BiPlay size={60}/> }
+      <div className="relative m-3 flex h-[100px] w-[100px] items-center justify-center bg-polp-grey align-middle">
+        {/* Display the image using the Image component */}
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt="Track cover"
+            className="h-full w-full object-cover"
+          />
+        )}
+
+        {/* Play/Pause Button */}
+        <button
+          onClick={() => handlePlayPause(track.source)}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          {isPlaying && track.source === currentTrack ? (
+            <BiPause size={60} />
+          ) : (
+            <BiPlay size={60} />
+          )}
         </button>
       </div>
 
       {/* Audio */}
-      <audio ref={audioRef} src={track.source} />
-     
+
       {/* Info/Progress */}
-      <div className="flex-col w-[70%] h-full">
-        <div className="h-[60%]">
-          <h2 className="p-2 text-xl">
-            {track.title}
-          </h2>
-          <h3 className="p-2 pt-0 pb-1 text-lg">      
-            {track.artist}
-          </h3>
-          <h4 className="p-2 pt-0 pb-1 text-polp-orange">
-            {Math.floor(duration / 60)}:{Math.floor(duration % 60)}
-          </h4>
+      <div className="h-full w-[175px] flex-col">
+        <div className="h-[62px]">
+          <h2 className="p-0 pt-2 text-lg">{track.title}</h2>
+          <h3 className="p-0 pt-0 pb-1">{track.artist}</h3>
+          {/* <h4 className="p-1 pt-0 pb-1 text-polp-black">{durationDisplay}</h4> */}
         </div>
-        <div className="h-[40%] flex justify-end mr-6 mt-0">
-          <button className="h-12 w-24 bg-cream ml-[25px] border-polp-orange border-solid border-2 flex place-content-center items-center">
-            <p className="m-1">Share</p>
-            <IoMdShareAlt size={20} className="m-1"/>
+        <div className="mr-4 mt-1 flex h-[120px] justify-end">
+          <button className="mb-2 mr-4 flex h-[42px] w-[42px] place-content-center items-center rounded-lg border-2 border-solid border-polp-black bg-polp-grey p-2 text-sm">
+            <Image alt="share track" src="/share.png" width={20} height={20} />
+          </button>
+          <button className="w-[42px]place-content-center flex h-[42px] items-center rounded-lg border-2 border-solid border-black bg-black p-2 text-sm">
+            <Image alt="collect track" src="/plus.png" width={20} height={20} />
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Track
+export default Track;

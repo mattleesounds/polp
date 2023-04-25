@@ -2,26 +2,16 @@ import Head from "next/head";
 import { Inter } from "@next/font/google";
 import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
-import Media from "@/components/Media";
-import {
-  useAuthenticator,
-  withAuthenticator,
-  Button,
-  Flex,
-  Heading,
-} from "@aws-amplify/ui-react";
-import { Amplify } from "aws-amplify";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
+import MediaContext from "@/components/MediaContext";
+import { useContext } from "react";
+import Feed from "@/components/Feed";
+import ControlBar from "@/components/ControlBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  /* Tracks */
-  /* const track1:TrackType = {id: 1, name: "song1", source: "/song1.mp3"}
-  const track2:TrackType = {id: 2, name: "song2", source: "/song2.mp3"}
-
-  const tracks:TrackType[] = [track1, track2] */
-
   const { user, signOut } = useAuthenticator((context) => [context.user]);
 
   return (
@@ -32,10 +22,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
-      <main className="h-screen bg-cream">
+      <main className="h-screen bg-polp-grey">
         <NavBar />
         <PageTitle />
-        <Media />
+        <Feed />
+        <ControlBar />
       </main>
     </>
   );
