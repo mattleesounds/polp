@@ -3,8 +3,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { Auth, Storage } from "aws-amplify";
 import { CognitoUser } from "@aws-amplify/auth";
 import Image from "next/image";
-import ControlBar from "@/components/ControlBar";
-import MediaContext from "@/components/MediaContext";
+import ControlBar from "./ControlBar";
+import MediaContext from "./MediaContext";
 
 interface UserProfile {
   name: string;
