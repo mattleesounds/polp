@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import AWS from "aws-sdk";
 import awsExports from "../src/aws-exports.js";
 import { S3Client, HeadObjectCommand } from "@aws-sdk/client-s3";
-import { TrackType } from "@/lib/types";
+import { TrackType } from "./MediaContext";
 
 interface MediaProviderProps {
   children: React.ReactNode; // Specify the type for the children prop
@@ -92,9 +92,9 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         const artist = metadata ? metadata["artist-name"] : "";
         const color = metadata ? metadata["color"] : "";
 
-        console.log("title:", title);
+        /* console.log("title:", title);
         console.log("artist:", artist);
-        console.log("color:", color);
+        console.log("color:", color); */
 
         const fileUrl = await Storage.get(fileKey);
 

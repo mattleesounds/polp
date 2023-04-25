@@ -176,12 +176,12 @@ const Upload = () => {
             label="Select color"
           >
             <Option value="">select vibe</Option>
-            <Option value="red">Red</Option>
-            <Option value="blue">Blue</Option>
-            <Option value="green">Green</Option>
-            <Option value="yellow">Green</Option>
-            <Option value="purple">Green</Option>
-            <Option value="orange">Green</Option>
+            <Option value="red">red</Option>
+            <Option value="blue">blue</Option>
+            <Option value="green">green</Option>
+            <Option value="yellow">yellow</Option>
+            <Option value="purple">purple</Option>
+            <Option value="orange">orange</Option>
             {/* Add more colors as needed */}
           </Select>
         </div>

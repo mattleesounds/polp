@@ -3,11 +3,11 @@ import { AiOutlinePause } from "react-icons/ai";
 import Image from "next/image";
 import { IoMdShareAlt } from "react-icons/io";
 import { BiPlay, BiPause } from "react-icons/bi";
-import { TrackType } from "@/lib/types";
+//import { TrackType } from "@/lib/types";
 import { useRef, useState, useEffect, useContext } from "react";
 import MediaContext from "./MediaContext";
 import { Storage } from "aws-amplify";
-
+import { TrackType } from "./MediaContext";
 interface TrackProps {
   track: TrackType;
 }
@@ -22,6 +22,8 @@ const Track = ({ track }: TrackProps): JSX.Element => {
     trackDurations,
   } = useContext(MediaContext);
 
+  /* console.log("Track prop:", track); */
+
   const duration = trackDurations[track.source] || 0;
   const durationMinutes = Math.floor(duration / 60);
   const durationSeconds = Math.floor(duration % 60);
@@ -33,7 +35,7 @@ const Track = ({ track }: TrackProps): JSX.Element => {
 
   useEffect(() => {
     const fetchImage = async () => {
-      const metadataFolderPath = `public/media/${track.trackId}/metadata/`;
+      const metadataFolderPath = `media/${track.trackId}/metadata/`;
       const response = await Storage.list(metadataFolderPath);
       const files = response.results || []; // Access the results property to get the array of files
       console.log("Files:", files); // Log the value of files to the console
@@ -48,7 +50,10 @@ const Track = ({ track }: TrackProps): JSX.Element => {
         if (imageFile && imageFile.key) {
           // Ensure that the key property is defined before using it
           const signedUrl = await Storage.get(imageFile.key);
+          console.log("Signed URL:", signedUrl); // Log the signed URL to the console
           setImageUrl(signedUrl as string);
+        } else {
+          console.log("Image file not found:", imageFile); // Log if the image file is not found
         }
       } else {
         console.error("Files is not an array:", files);
@@ -57,11 +62,12 @@ const Track = ({ track }: TrackProps): JSX.Element => {
     fetchImage();
   }, [track.trackId]);
   // ... (existing code)
+  console.log("imageUrl:", imageUrl);
 
   return (
     <div className="m-3 flex h-32 w-[300px] rounded-lg bg-polp-white">
       {/* Art/Controls */}
-      <div className="bg-slate-400 z-10 m-3 flex h-[100px] w-[100px] items-center justify-center align-middle">
+      <div className="relative m-3 flex h-[100px] w-[100px] items-center justify-center bg-polp-grey align-middle">
         {/* Display the image using the Image component */}
         {imageUrl && (
           <img
@@ -70,7 +76,12 @@ const Track = ({ track }: TrackProps): JSX.Element => {
             className="h-full w-full object-cover"
           />
         )}
-        <button onClick={() => handlePlayPause(track.source)}>
+
+        {/* Play/Pause Button */}
+        <button
+          onClick={() => handlePlayPause(track.source)}
+          className="absolute inset-0 flex items-center justify-center"
+        >
           {isPlaying && track.source === currentTrack ? (
             <BiPause size={60} />
           ) : (
