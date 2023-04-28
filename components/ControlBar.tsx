@@ -1,11 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { GiPauseButton, GiPlayButton } from "react-icons/gi";
-import { BsFillSkipEndFill, BsFillSkipStartFill } from "react-icons/bs";
-import { TrackType } from "@/lib/types";
 import { BiPlay, BiPause, BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { useContext } from "react";
 import MediaContext from "./MediaContext";
+import { Auth } from "aws-amplify";
+import { getArtistNameBySubId } from "../utils";
 
 interface Props {}
 
@@ -22,10 +21,21 @@ const ControlBar = (): JSX.Element => {
   } = useContext(MediaContext);
 
   const [progress, setProgress] = useState(0);
-  const track = tracks.find((track) => track.source === currentTrack);
 
   const [progressMinSec, setProgressMinSec] = useState("");
   const [durationMinSec, setDurationMinSec] = useState("");
+  const [artistName, setArtistName] = useState("");
+
+  useEffect(() => {
+    if (!audioElement || !currentTrack) return;
+
+    const fetchArtistName = async () => {
+      const artistSubId = currentTrack.artistSubId; // Get the artistSubId from currentTrack
+      const name = await getArtistNameBySubId(artistSubId);
+      setArtistName(name || "Unknown"); // Use "Unknown" as a fallback value
+    };
+    fetchArtistName();
+  }, [currentTrack, audioElement]);
 
   // Progress Bar Hook
   useEffect(() => {
@@ -46,7 +56,7 @@ const ControlBar = (): JSX.Element => {
   useEffect(() => {
     if (!audioElement || !currentTrack) return;
 
-    const duration = trackDurations[currentTrack] || 0;
+    const duration = trackDurations[currentTrack.source] || 0;
     const durationMinutes = Math.floor(duration / 60);
     const durationSeconds = Math.floor(duration % 60);
     setDurationMinSec(
@@ -84,14 +94,14 @@ const ControlBar = (): JSX.Element => {
       audioElement.currentTime = 0;
     } else {
       const currentIndex = tracks.findIndex(
-        (track) => track.source === currentTrack
+        (track) => track.source === currentTrack.source
       );
       if (currentIndex === 0) return;
 
-      const previousTrack = tracks[currentIndex - 1]?.source;
+      const previousTrack = tracks[currentIndex - 1];
       setCurrentTrack(previousTrack);
       audioElement.pause();
-      handlePlayPause(previousTrack);
+      handlePlayPause(previousTrack.source);
       audioElement.currentTime = 0;
     }
   };
@@ -100,37 +110,34 @@ const ControlBar = (): JSX.Element => {
     if (!audioElement || !currentTrack) return;
 
     const currentIndex = tracks.findIndex(
-      (track) => track.source === currentTrack
+      (track) => track.source === currentTrack.source
     );
     if (currentIndex === tracks.length - 1) return;
 
-    const nextTrack = tracks[currentIndex + 1]?.source;
+    const nextTrack = tracks[currentIndex + 1];
     setCurrentTrack(nextTrack);
     audioElement.pause();
-    handlePlayPause(nextTrack);
+    handlePlayPause(nextTrack.source);
     audioElement.currentTime = 0;
   };
 
   return (
     <div className="fixed bottom-0 m-0 h-16 w-full bg-white p-0 leading-none">
       <div className="m-0 flex justify-center p-0">
-        {/* Now Playing */}
-        <div className="absolute left-1">
-          <div className="flex flex-col">
-            <h2 className="pl-2 text-lg">
-              {currentTrack ? track!.artist : ""}
-            </h2>
-            <h3 className="pl-2">{currentTrack ? track!.title : ""}</h3>
-          </div>
-        </div>
-        {/* Controls */}
+        {/* Now Playing /}
+<div className="absolute left-1">
+<div className="flex flex-col">
+<h2 className="pl-2 text-lg">{artistName}</h2>
+<h3 className="pl-2">{currentTrack ? currentTrack.title : ""}</h3>
+</div>
+</div>
+{/ Controls */}
         <div className="max-w-1/2 relative top-0 m-0 bg-white p-0">
           <button className="relative" onClick={handlePrevious}>
             <BiSkipPrevious size={50} />
           </button>
-
           <button
-            onClick={() => handlePlayPause(currentTrack!)}
+            onClick={() => handlePlayPause(currentTrack!.source)}
             className="relative top-0 focus:outline-none"
           >
             {isPlaying ? (

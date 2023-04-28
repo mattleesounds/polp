@@ -82,7 +82,7 @@ const Track = ({ track }: TrackProps): JSX.Element => {
           onClick={() => handlePlayPause(track.source)}
           className="absolute inset-0 flex items-center justify-center"
         >
-          {isPlaying && track.source === currentTrack ? (
+          {isPlaying && track.source === currentTrack!.source ? (
             <BiPause size={60} />
           ) : (
             <BiPlay size={60} />
@@ -96,7 +96,7 @@ const Track = ({ track }: TrackProps): JSX.Element => {
       <div className="h-full w-[175px] flex-col">
         <div className="h-[62px]">
           <h2 className="p-0 pt-2 text-lg">{track.title}</h2>
-          <h3 className="p-0 pt-0 pb-1">{track.artist}</h3>
+          <h3 className="p-0 pt-0 pb-1">{track.artistSubId}</h3>
           {/* <h4 className="p-1 pt-0 pb-1 text-polp-black">{durationDisplay}</h4> */}
         </div>
         <div className="mr-4 mt-1 flex h-[120px] justify-end">

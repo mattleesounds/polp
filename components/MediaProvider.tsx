@@ -14,20 +14,6 @@ interface MediaProviderProps {
 }
 
 // Function to get the artist name by sub ID
-const getArtistNameBySubId = async (subId: string): Promise<string> => {
-  try {
-    // Get the user attributes from Cognito
-    const user = await Auth.userAttributes(
-      await Auth.currentAuthenticatedUser()
-    );
-    // Get the artist name from the "custom:Name" attribute
-    const artistName = user.find((attr) => attr.Name === "custom:Name")?.Value;
-    return artistName || "Unknown"; // Return 'Unknown' if the attribute is not found
-  } catch (error) {
-    console.error("Failed to get artist name:", error);
-    return "Unknown";
-  }
-};
 
 /* const getMetadata = async (trackId: string, audioFileName: string) => {
   const s3 = new S3(); // Create an instance of the S3 client
@@ -48,7 +34,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   /* States */
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTrack, setCurrentTrack] = useState<string | null>(null);
+  const [currentTrack, setCurrentTrack] = useState<TrackType | null>(null);
   const [trackDurations, setTrackDurations] = useState<Record<string, number>>(
     {}
   );
@@ -89,7 +75,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
 
         const metadata = metadataResponse.Metadata;
         const title = metadata ? metadata["title"] : "";
-        const artist = metadata ? metadata["artist-name"] : "";
+        const artistSubId = metadata ? metadata["artist-sub-id"] : "";
         const color = metadata ? metadata["color"] : "";
 
         /* console.log("title:", title);
@@ -100,7 +86,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
 
         return {
           title: title,
-          artist: artist,
+          artistSubId: artistSubId,
           source: fileUrl as string,
           color: color,
           trackId: trackId,
@@ -122,17 +108,17 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   // Update the audio element's source when the current track changes
   useEffect(() => {
     if (audioRef.current && currentTrack) {
-      audioRef.current.src = currentTrack;
+      audioRef.current.src = currentTrack.source;
     }
   }, [currentTrack]);
 
   useEffect(() => {
     if (audioRef.current && currentTrack) {
-      audioRef.current.src = currentTrack;
+      audioRef.current.src = currentTrack.source;
       audioRef.current.onloadedmetadata = () => {
         setTrackDurations((prevDurations) => ({
           ...prevDurations,
-          [currentTrack]: audioRef.current!.duration,
+          [currentTrack.source]: audioRef.current!.duration,
         }));
       };
     }
@@ -144,7 +130,10 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     const audioElement = audioRef.current;
     if (!audioElement) return;
 
-    if (currentTrack === trackSource) {
+    // Find the track object that matches the trackSource
+    const selectedTrack = tracks.find((track) => track.source === trackSource);
+
+    if (currentTrack && selectedTrack && currentTrack.source === trackSource) {
       if (audioElement.paused) {
         audioElement.play().catch((error) => {
           console.error("Error playing audio:", error);
@@ -155,28 +144,30 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         setIsPlaying(false);
       }
     } else {
-      // Pause the current audio
-      audioElement.pause();
-      // Set the new source
-      audioElement.src = trackSource;
-      // Update the current track
-      setCurrentTrack(trackSource);
-      // Set isPlaying to true
-      setIsPlaying(true);
-      // Add an event listener for the canplaythrough event
-      const handleCanPlayThrough = () => {
-        audioElement.play().catch((error) => {
-          console.error("Error playing audio:", error);
-        });
-        // Remove the event listener after playback starts
-        audioElement.removeEventListener(
-          "canplaythrough",
-          handleCanPlayThrough
-        );
-      };
-      audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
-      // Load the new audio source
-      audioElement.load();
+      if (selectedTrack) {
+        // Pause the current audio
+        audioElement.pause();
+        // Set the new source
+        audioElement.src = selectedTrack.source;
+        // Update the current track
+        setCurrentTrack(selectedTrack); // Set the entire track object
+        // Set isPlaying to true
+        setIsPlaying(true);
+        // Add an event listener for the canplaythrough event
+        const handleCanPlayThrough = () => {
+          audioElement.play().catch((error) => {
+            console.error("Error playing audio:", error);
+          });
+          // Remove the event listener after playback starts
+          audioElement.removeEventListener(
+            "canplaythrough",
+            handleCanPlayThrough
+          );
+        };
+        audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
+        // Load the new audio source
+        audioElement.load();
+      }
     }
   };
 
