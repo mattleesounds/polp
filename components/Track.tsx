@@ -76,6 +76,7 @@ const Track = ({ track }: TrackProps): JSX.Element => {
       setArtistName(name || "Unknown"); // Use "Unknown" as a fallback value
     };
     fetchArtistName();
+    console.log(artistName);
   }, [currentTrack, artistName]);
 
   const addToCollection = async () => {
@@ -88,14 +89,17 @@ const Track = ({ track }: TrackProps): JSX.Element => {
       const artistSub = track.artistSubId;
 
       // Construct the path to the JSON file in the user's collection
-      const collectionPath = `collections/${userSub}/${artistSub}/collection.json`;
+      const userCollectionPath = `collections/${userSub}/${artistSub}/collection.json`;
+
+      // Construct the path to the JSON file in the artist's collectors folder
+      const artistCollectorsPath = `collectors/${artistSub}/${userSub}/collection.json`;
 
       // Initialize an empty array to store the trackIds
       let trackIds = [];
 
       try {
         // Try to download the JSON file from S3
-        const fileUrl = await Storage.get(collectionPath);
+        const fileUrl = await Storage.get(userCollectionPath);
         const response = await fetch(fileUrl as string);
         const data = await response.json();
         trackIds = data.trackIds || [];
@@ -112,8 +116,13 @@ const Track = ({ track }: TrackProps): JSX.Element => {
         trackIds: trackIds,
       };
 
-      // Upload the updated JSON file back to S3
-      await Storage.put(collectionPath, JSON.stringify(collectionData), {
+      // Upload the updated JSON file back to S3 (user's collection)
+      await Storage.put(userCollectionPath, JSON.stringify(collectionData), {
+        contentType: "application/json",
+      });
+
+      // Upload the updated JSON file to S3 (artist's collectors folder)
+      await Storage.put(artistCollectorsPath, JSON.stringify(collectionData), {
         contentType: "application/json",
       });
 

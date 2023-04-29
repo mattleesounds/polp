@@ -60,8 +60,6 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         return key.endsWith(".mp3") || key.endsWith(".wav");
       });
 
-      console.log("Audio files:", audioFiles);
-
       const trackPromises = audioFiles.map(async (item) => {
         const fileKey = item.key || "";
         const trackId = fileKey.split("/")[1];
@@ -71,16 +69,11 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
           Key: "public/" + fileKey,
         });
         const metadataResponse = await s3Client.send(headObjectCommand);
-        console.log("Metadata response for file:", fileKey, metadataResponse);
 
         const metadata = metadataResponse.Metadata;
         const title = metadata ? metadata["title"] : "";
         const artistSubId = metadata ? metadata["artist-sub-id"] : "";
         const color = metadata ? metadata["color"] : "";
-
-        /* console.log("title:", title);
-        console.log("artist:", artist);
-        console.log("color:", color); */
 
         const fileUrl = await Storage.get(fileKey);
 
@@ -94,7 +87,6 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
       });
 
       const trackList = await Promise.all(trackPromises);
-      console.log("Track list:", trackList);
       setTracks(trackList);
     } catch (error) {
       console.error("Failed to fetch tracks:", error);

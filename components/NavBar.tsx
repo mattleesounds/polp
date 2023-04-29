@@ -42,12 +42,12 @@ const NavBar = () => {
         </div> */}
 
         {/* Menu */}
-        <div className="m-0 flex h-full w-[90px] ">
+        <div className="m-0 flex h-full w-[170px] ">
           <button
-            className="m-2 mr-4 hover:cursor-pointer"
+            className="m-2 ml-4 mr-4 hover:cursor-pointer"
             onClick={toggleMenu}
           >
-            <AiOutlineMenu size={20} />
+            <AiOutlineMenu size={30} />
           </button>
           {isOpen && (
             <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg md:w-[235px]">
@@ -70,7 +70,16 @@ const NavBar = () => {
               </ul>
             </div>
           )}
-          <Link href="/profile" className="mt-4">
+          <Link href="/collectionPage">
+            <Image
+              src="/collection.png"
+              alt="collection"
+              width={30}
+              height={30}
+              className="m-2 mr-8 mt-4 hover:cursor-pointer"
+            />
+          </Link>
+          <Link href="/profile" className="mt-4 ml-4 mr-8">
             <MdAccountCircle size={30} />
           </Link>
         </div>
