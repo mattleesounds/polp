@@ -35,7 +35,7 @@ const ControlBar = (): JSX.Element => {
       setArtistName(name || "Unknown"); // Use "Unknown" as a fallback value
     };
     fetchArtistName();
-  }, [currentTrack, audioElement]);
+  }, [currentTrack, audioElement, artistName]);
 
   // Progress Bar Hook
   useEffect(() => {
@@ -124,14 +124,13 @@ const ControlBar = (): JSX.Element => {
   return (
     <div className="fixed bottom-0 m-0 h-16 w-full bg-white p-0 leading-none">
       <div className="m-0 flex justify-center p-0">
-        {/* Now Playing /}
-<div className="absolute left-1">
-<div className="flex flex-col">
-<h2 className="pl-2 text-lg">{artistName}</h2>
-<h3 className="pl-2">{currentTrack ? currentTrack.title : ""}</h3>
-</div>
-</div>
-{/ Controls */}
+        <div className="absolute left-1">
+          <div className="flex flex-col">
+            <h2 className="pl-2 text-lg">{artistName}</h2>
+            <h3 className="pl-2">{currentTrack ? currentTrack.title : ""}</h3>
+          </div>
+        </div>
+
         <div className="max-w-1/2 relative top-0 m-0 bg-white p-0">
           <button className="relative" onClick={handlePrevious}>
             <BiSkipPrevious size={50} />

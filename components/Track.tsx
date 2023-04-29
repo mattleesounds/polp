@@ -8,6 +8,8 @@ import { useRef, useState, useEffect, useContext } from "react";
 import MediaContext from "./MediaContext";
 import { Storage } from "aws-amplify";
 import { TrackType } from "./MediaContext";
+import { Auth } from "aws-amplify";
+import { getArtistNameBySubId } from "../utils";
 interface TrackProps {
   track: TrackType;
 }
@@ -32,6 +34,7 @@ const Track = ({ track }: TrackProps): JSX.Element => {
     .padStart(2, "0")}`;
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [artistName, setArtistName] = useState("");
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -63,6 +66,64 @@ const Track = ({ track }: TrackProps): JSX.Element => {
   }, [track.trackId]);
   // ... (existing code)
   console.log("imageUrl:", imageUrl);
+
+  useEffect(() => {
+    if (!currentTrack) return;
+
+    const fetchArtistName = async () => {
+      const artistSubId = currentTrack.artistSubId; // Get the artistSubId from currentTrack
+      const name = await getArtistNameBySubId(artistSubId);
+      setArtistName(name || "Unknown"); // Use "Unknown" as a fallback value
+    };
+    fetchArtistName();
+  }, [currentTrack, artistName]);
+
+  const addToCollection = async () => {
+    try {
+      // Get the current authenticated user's sub (unique identifier)
+      const user = await Auth.currentAuthenticatedUser();
+      const userSub = user.attributes.sub;
+
+      // Get the artist's sub ID from the track metadata
+      const artistSub = track.artistSubId;
+
+      // Construct the path to the JSON file in the user's collection
+      const collectionPath = `collections/${userSub}/${artistSub}/collection.json`;
+
+      // Initialize an empty array to store the trackIds
+      let trackIds = [];
+
+      try {
+        // Try to download the JSON file from S3
+        const fileUrl = await Storage.get(collectionPath);
+        const response = await fetch(fileUrl as string);
+        const data = await response.json();
+        trackIds = data.trackIds || [];
+      } catch (error) {
+        // If the file does not exist, we will create a new one later
+        console.warn("Collection file not found. Creating a new one.");
+      }
+
+      // Add the new trackId to the array
+      trackIds.push(track.trackId);
+
+      // Create an object to store in the JSON file
+      const collectionData = {
+        trackIds: trackIds,
+      };
+
+      // Upload the updated JSON file back to S3
+      await Storage.put(collectionPath, JSON.stringify(collectionData), {
+        contentType: "application/json",
+      });
+
+      // Notify the user that the track has been added to their collection
+      alert("Track added to your collection!");
+    } catch (error) {
+      console.error("Error adding track to collection:", error);
+      alert("Failed to add track to collection.");
+    }
+  };
 
   return (
     <div className="m-3 flex h-32 w-[300px] rounded-lg bg-polp-white">
@@ -96,14 +157,17 @@ const Track = ({ track }: TrackProps): JSX.Element => {
       <div className="h-full w-[175px] flex-col">
         <div className="h-[62px]">
           <h2 className="p-0 pt-2 text-lg">{track.title}</h2>
-          <h3 className="p-0 pt-0 pb-1">{track.artistSubId}</h3>
+          <h3 className="p-0 pt-0 pb-1">{artistName}</h3>
           {/* <h4 className="p-1 pt-0 pb-1 text-polp-black">{durationDisplay}</h4> */}
         </div>
         <div className="mr-4 mt-1 flex h-[120px] justify-end">
           <button className="mb-2 mr-4 flex h-[42px] w-[42px] place-content-center items-center rounded-lg border-2 border-solid border-polp-black bg-polp-grey p-2 text-sm">
             <Image alt="share track" src="/share.png" width={20} height={20} />
           </button>
-          <button className="w-[42px]place-content-center flex h-[42px] items-center rounded-lg border-2 border-solid border-black bg-black p-2 text-sm">
+          <button
+            onClick={addToCollection}
+            className="w-[42px]place-content-center flex h-[42px] items-center rounded-lg border-2 border-solid border-black bg-black p-2 text-sm"
+          >
             <Image alt="collect track" src="/plus.png" width={20} height={20} />
           </button>
         </div>
