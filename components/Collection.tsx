@@ -4,6 +4,7 @@ import MediaContext from "./MediaContext";
 import { useContext } from "react";
 import { Auth, Storage } from "aws-amplify";
 import { TrackType } from "./MediaContext";
+import ControlBar from "./ControlBar";
 
 const CollectionPage = (): JSX.Element => {
   const { tracks } = useContext(MediaContext);
@@ -59,6 +60,7 @@ const CollectionPage = (): JSX.Element => {
       {collectedTracks.map((track) => (
         <Track key={track.trackId} track={track} />
       ))}
+      <ControlBar />
     </div>
   );
 };
