@@ -41,7 +41,6 @@ const Track = ({ track }: TrackProps): JSX.Element => {
       const metadataFolderPath = `media/${track.trackId}/metadata/`;
       const response = await Storage.list(metadataFolderPath);
       const files = response.results || []; // Access the results property to get the array of files
-      console.log("Files:", files); // Log the value of files to the console
       if (Array.isArray(files)) {
         // Check if files is an array
         const imageFile = files.find((file) => {
@@ -53,7 +52,6 @@ const Track = ({ track }: TrackProps): JSX.Element => {
         if (imageFile && imageFile.key) {
           // Ensure that the key property is defined before using it
           const signedUrl = await Storage.get(imageFile.key);
-          console.log("Signed URL:", signedUrl); // Log the signed URL to the console
           setImageUrl(signedUrl as string);
         } else {
           console.log("Image file not found:", imageFile); // Log if the image file is not found
@@ -65,14 +63,16 @@ const Track = ({ track }: TrackProps): JSX.Element => {
     fetchImage();
   }, [track.trackId]);
   // ... (existing code)
-  console.log("imageUrl:", imageUrl);
 
   useEffect(() => {
     if (!currentTrack) return;
+    console.log("Current track:", currentTrack);
 
     const fetchArtistName = async () => {
       const artistSubId = currentTrack.artistSubId; // Get the artistSubId from currentTrack
+      console.log("Artist sub ID:", artistSubId);
       const name = await getArtistNameBySubId(artistSubId);
+      console.log("Artist name:", name);
       setArtistName(name || "Unknown"); // Use "Unknown" as a fallback value
     };
     fetchArtistName();

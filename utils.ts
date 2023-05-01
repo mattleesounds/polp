@@ -9,26 +9,28 @@ export const getArtistNameBySubId = async (subId: string) => {
     // Update the AWS SDK configuration with the obtained credentials and region
     AWS.config.update({
       credentials: Auth.essentialCredentials(credentials),
-      region: 'us-east-2', // Specify the region here
+      region: 'us-east-2',
     });
 
     // Create an instance of the CognitoIdentityServiceProvider client
-    // after setting the region and credentials
     const cognito = new AWS.CognitoIdentityServiceProvider();
 
-    // Define the parameters for the adminGetUser method
+    // Define the parameters for the listUsers method
     const params = {
-      UserPoolId: 'YOUR_COGNITO_USER_POOL_ID', // Replace with your Cognito User Pool ID
-      Username: subId, // The subId of the artist
+      UserPoolId: 'YOUR_COGNITO_USER_POOL_ID',
+      Filter: `sub = "${subId}"`, // Filter users based on the sub attribute
     };
 
-    // Call the adminGetUser method to fetch user attributes
-    const response = await cognito.adminGetUser(params).promise();
+    // Call the listUsers method to search for users based on the sub attribute
+    const response = await cognito.listUsers(params).promise();
 
-    // Check if UserAttributes is defined
-    if (response.UserAttributes) {
-      // Find the custom:Name attribute in the response
-      const artistNameAttr = response.UserAttributes.find(attr => attr.Name === 'custom:Name');
+    // Check if any users were found
+    if (response.Users && response.Users.length > 0) {
+      // Get the first user from the response
+      const user = response.Users[0];
+
+      // Find the custom:Name attribute in the user's attributes using optional chaining
+      const artistNameAttr = user.Attributes?.find(attr => attr.Name === 'custom:Name');
       const artistName = artistNameAttr ? artistNameAttr.Value : 'Unknown';
       return artistName;
     } else {
