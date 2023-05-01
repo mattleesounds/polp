@@ -58,8 +58,8 @@ const NavBar = () => {
                 <Link href="/profile" className="w-full">
                   <li className="p-2 hover:bg-polp-grey">profile</li>
                 </Link>
-                <Link href="/">
-                  <li className="p-2 hover:bg-polp-grey">community</li>
+                <Link href="/listenersPage">
+                  <li className="p-2 hover:bg-polp-grey">listeners</li>
                 </Link>
                 <Link href="/uploadPage">
                   <li className="p-2 hover:bg-polp-grey">upload music</li>
