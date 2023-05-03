@@ -67,13 +67,10 @@ const Track = ({ track }: TrackProps): JSX.Element => {
   useEffect(() => {
     const fetchArtistName = async () => {
       const artistSubId = track.artistSubId; // Get the artistSubId from the track prop
-      console.log("Artist sub ID:", artistSubId);
       const name = await getArtistNameBySubId(artistSubId);
-      console.log("Artist name:", name);
       setArtistName(name || "Unknown"); // Use "Unknown" as a fallback value
     };
     fetchArtistName();
-    console.log(artistName);
   }, [track, artistName]); // Use the track prop as a dependency
 
   const addToCollection = async () => {
