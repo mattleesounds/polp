@@ -34,7 +34,7 @@ const NavBar = ({ handleProfile, handleFeed, handleCmt }: props) => {
         {/* search bar */}
         <div className="relative z-10 m-12 p-2">
           <input
-            className="m-12 w-full bg-cream p-2"
+            className="m-12 w-full bg-polp-grey p-2"
             placeholder="App coming soon...!"
           />
         </div>
@@ -48,13 +48,10 @@ const NavBar = ({ handleProfile, handleFeed, handleCmt }: props) => {
             <div className="fixed top-12 right-0 z-50 bg-[#fdfdfd] p-2 text-xl shadow-lg md:w-[235px]">
               <ul>
                 <button onClick={handleProfile} className="w-full">
-                  <li className="p-2 hover:bg-cream">feed</li>
+                  <li className="p-2 hover:bg-polp-grey">feed</li>
                 </button>
                 <button onClick={handleProfile} className="w-full">
-                  <li className="p-2 hover:bg-cream">profile</li>
-                </button>
-                <button onClick={handleCmt}>
-                  <li className="p-2 hover:bg-cream">community</li>
+                  <li className="p-2 hover:bg-polp-grey">profile</li>
                 </button>
               </ul>
             </div>

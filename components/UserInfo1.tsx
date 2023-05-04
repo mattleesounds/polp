@@ -15,7 +15,7 @@ const UserInfo = () => {
       <div className="h-2"></div>
       <div>
         <h1 className="text-xl font-bold">Location</h1>
-        <p>New Orleans, LA, USA, Earth, Known Universe</p>
+        <p>New Orleans, LA, USA</p>
       </div>
     </div>
   );

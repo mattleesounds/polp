@@ -100,7 +100,7 @@ const Media = (): JSX.Element => {
           {/* search bar */}
           <div className="w-half absolute top-1/2 left-1/2 z-20 h-full -translate-x-1/2 -translate-y-1/2 transform items-center md:w-[50%]">
             <input
-              className="w-full translate-y-5 bg-cream p-1"
+              className="w-full translate-y-5 bg-polp-grey p-1"
               placeholder="App coming soon...!"
             />
           </div>
@@ -115,7 +115,7 @@ const Media = (): JSX.Element => {
                 <ul>
                   <Link to="feed" className="w-full" offset={-60} smooth="true">
                     <button onClick={toggleMenu} className="w-full text-left">
-                      <li className="p-2 hover:bg-cream">feed</li>
+                      <li className="p-2 hover:bg-polp-grey">feed</li>
                     </button>
                   </Link>
                   <Link
@@ -125,17 +125,12 @@ const Media = (): JSX.Element => {
                     smooth="true"
                   >
                     <button onClick={toggleMenu} className="w-full text-left">
-                      <li className="p-2 hover:bg-cream">profile</li>
-                    </button>
-                  </Link>
-                  <Link to="cmt" offset={-60} smooth="true">
-                    <button onClick={toggleMenu} className="w-full text-left">
-                      <li className="p-2 hover:bg-cream">community</li>
+                      <li className="p-2 hover:bg-polp-grey">profile</li>
                     </button>
                   </Link>
                   <a href="https://zippy-frangollo-058533.netlify.app/">
                     <button onClick={toggleMenu} className="w-full text-left">
-                      <li className="p-2 hover:bg-cream">whitepaper</li>
+                      <li className="p-2 hover:bg-polp-grey">whitepaper</li>
                     </button>
                   </a>
                 </ul>
@@ -160,9 +155,6 @@ const Media = (): JSX.Element => {
         <div className="h-0"></div>
       </Element>
       <Feed handleProfile={handleProfile} />
-      <Element name="cmt">
-        <Cmtool />
-      </Element>
       <div className="h-2 bg-[#FDFDFD]"></div>
       <Footer />
       <ControlBar

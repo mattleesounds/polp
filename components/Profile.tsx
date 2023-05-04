@@ -9,13 +9,13 @@ import ControlBar from "@/components/ControlBar";
 
 const Profile = () => {
   return (
-    <div className="mb-0 h-full flex-col bg-cream">
+    <div className="mb-0 h-full flex-col bg-polp-grey">
       <div className="mb-0 flex">
         {/* <div className="h-4 bg-cream"></div> */}
         <div className="max-w-48 m-auto mb-0 mt-8 flex justify-center pb-12">
           <div className="m-0 w-[90%] max-w-[1240px]">
             <div className="m-4 mt-0 mb-0 flex justify-center">
-              <h1 className="m-2 mt-0 font-blogger text-5xl text-polp-orange">
+              <h1 className="m-2 mt-0 font-blogger text-5xl">
                 explore the sonic frontier
               </h1>
             </div>
@@ -39,13 +39,13 @@ const Profile = () => {
       <div className="m-4 mt-0 flex items-center justify-center text-center">
         <a
           href="https://bsb2oht0phj.typeform.com/to/E2joby1U"
-          className="m-12 mt-0 mb-12 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-polp-orange bg-[#FDFDFD] p-2 text-center text-[#020202] hover:bg-slate-200 md:text-lg"
+          className="m-12 mt-0 mb-12 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-polp-black bg-[#FDFDFD] p-2 text-center text-[#020202] hover:bg-slate-200 "
         >
           signup for the waitlist
         </a>
         <a
           href="https://bsb2oht0phj.typeform.com/to/QFNUiYOa"
-          className="m-12 mb-12 mt-0 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-[#010101] bg-polp-orange p-2 text-center text-white hover:bg-[#efac90] md:text-lg"
+          className="m-12 mb-12 mt-0 flex h-[75px] w-48 content-center items-center justify-center rounded-lg border-2 border-[#010101] bg-polp-black p-2 text-center text-white hover:bg-[#efac90]"
         >
           apply for artist account
         </a>

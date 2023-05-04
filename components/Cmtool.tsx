@@ -3,13 +3,13 @@ import Image from "next/image";
 
 const Cmtool = () => {
   return (
-    <div className="m-0 mt-4 mb-0 flex h-full w-[100%] flex-col place-items-center bg-cream pb-0">
-      <h1 className="m-2 mb-8 mt-4 text-center font-blogger text-5xl text-polp-orange">
+    <div className="m-0 mt-4 mb-0 flex h-full w-[100%] flex-col place-items-center bg-polp-grey pb-0">
+      <h1 className="m-2 mb-8 mt-4 text-center font-blogger text-5xl">
         build community
       </h1>
       <p className="text-slate-500">
         For now, let<span>&#39;</span>s introduce the{" "}
-        <span className="text-polp-orange">POLP</span> team...
+        <span className="">POLP</span> team...
       </p>
       <div className="h-4"></div>
       <div className="ali m-4  mt-0 flex-col items-center">
