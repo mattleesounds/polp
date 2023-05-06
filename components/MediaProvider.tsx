@@ -13,23 +13,6 @@ interface MediaProviderProps {
   children: React.ReactNode; // Specify the type for the children prop
 }
 
-// Function to get the artist name by sub ID
-
-/* const getMetadata = async (trackId: string, audioFileName: string) => {
-  const s3 = new S3(); // Create an instance of the S3 client
-  const params = {
-    Bucket: "YOUR_S3_BUCKET_NAME124813-dev", // Replace with your bucket name
-    Key: `media/${trackId}/${audioFileName}`, // Use the correct key
-  };
-  try {
-    const data = await s3.headObject(params).promise();
-    return data.Metadata || {};
-  } catch (error) {
-    console.error("Error retrieving metadata:", error);
-    return {};
-  }
-}; */
-
 const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   /* States */
   const [tracks, setTracks] = useState<TrackType[]>([]);
@@ -98,11 +81,11 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   }, [fetchTracks]); // Include fetchTracks in the dependency array
 
   // Update the audio element's source when the current track changes
-  useEffect(() => {
+  /*   useEffect(() => {
     if (audioRef.current && currentTrack) {
       audioRef.current.src = currentTrack.source;
     }
-  }, [currentTrack]);
+  }, [currentTrack]); */
 
   useEffect(() => {
     if (audioRef.current && currentTrack) {
@@ -116,27 +99,42 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     }
   }, [currentTrack]);
 
+  const handlePlayPause = () => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.play().catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+    }
+  };
+
   /* Play/Pause Function */
-  const handlePlayPause = (trackSource: string) => {
+  /* const handlePlayPause = (trackSource: string) => {
     // Get the audio element from the ref
     const audioElement = audioRef.current;
     if (!audioElement) return;
+
+    console.log("handlePlayPause called:", trackSource);
 
     // Find the track object that matches the trackSource
     const selectedTrack = tracks.find((track) => track.source === trackSource);
 
     if (currentTrack && selectedTrack && currentTrack.source === trackSource) {
+      console.log("Toggling play/pause for current track");
       if (audioElement.paused) {
+        console.log("Attempting to play current track");
         audioElement.play().catch((error) => {
           console.error("Error playing audio:", error);
         });
         setIsPlaying(true);
       } else {
+        console.log("Pausing current track");
         audioElement.pause();
         setIsPlaying(false);
       }
     } else {
       if (selectedTrack) {
+        console.log("Switching to new track:", selectedTrack.source);
         // Pause the current audio
         audioElement.pause();
         // Set the new source
@@ -145,23 +143,21 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         setCurrentTrack(selectedTrack); // Set the entire track object
         // Set isPlaying to true
         setIsPlaying(true);
-        // Add an event listener for the canplaythrough event
-        const handleCanPlayThrough = () => {
+        // Add an event listener for the canplay event
+        const handleCanPlay = () => {
+          console.log("Can play event triggered, attempting to play new track");
           audioElement.play().catch((error) => {
             console.error("Error playing audio:", error);
           });
           // Remove the event listener after playback starts
-          audioElement.removeEventListener(
-            "canplaythrough",
-            handleCanPlayThrough
-          );
+          audioElement.removeEventListener("canplay", handleCanPlay);
         };
-        audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
+        audioElement.addEventListener("canplay", handleCanPlay);
         // Load the new audio source
         audioElement.load();
       }
     }
-  };
+  }; */
 
   return (
     <MediaContext.Provider

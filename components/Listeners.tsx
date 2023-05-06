@@ -79,35 +79,26 @@ const ListenersPage = () => {
 
   return (
     <div className="flex justify-center">
-      <table className="table-auto border-collapse border border-black">
+      <table className="w-[350px] border border-black md:w-[650px]">
         <thead>
           <tr className=" bg-black text-white">
-            <th className="border border-black border-r-white px-4 py-2">
+            <th className="border border-black border-r-white px-2 py-2">
               Name
             </th>
-            <th className="border border-black border-r-white px-4 py-2">
-              Email
-            </th>
-            <th className="border border-black px-4 py-2">Profile</th>
+            <th className="border border-black px-2 py-2">Email</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-sm">
           {listeners.map((listener) => (
             <tr
               key={listener.sub}
               className="border border-black bg-polp-white"
             >
-              <td className="border border-black px-4 py-2">
+              <td className="border border-black px-2 py-2">
                 {listener.name || "Unknown"}
               </td>
-              <td className="border border-black px-4 py-2">
+              <td className="border border-black px-2 py-2">
                 {listener.email || "Unknown"}
-              </td>
-              <td className="border border-black px-4 py-2">
-                {/* Replace "#" with the actual link to the user's profile */}
-                <a href="#" className="text-blue-500 hover:underline">
-                  View Profile
-                </a>
               </td>
             </tr>
           ))}
