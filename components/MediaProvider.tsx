@@ -13,42 +13,11 @@ interface MediaProviderProps {
   children: React.ReactNode; // Specify the type for the children prop
 }
 
-// Function to get the artist name by sub ID
-const getArtistNameBySubId = async (subId: string): Promise<string> => {
-  try {
-    // Get the user attributes from Cognito
-    const user = await Auth.userAttributes(
-      await Auth.currentAuthenticatedUser()
-    );
-    // Get the artist name from the "custom:Name" attribute
-    const artistName = user.find((attr) => attr.Name === "custom:Name")?.Value;
-    return artistName || "Unknown"; // Return 'Unknown' if the attribute is not found
-  } catch (error) {
-    console.error("Failed to get artist name:", error);
-    return "Unknown";
-  }
-};
-
-/* const getMetadata = async (trackId: string, audioFileName: string) => {
-  const s3 = new S3(); // Create an instance of the S3 client
-  const params = {
-    Bucket: "polp-media124813-dev", // Replace with your bucket name
-    Key: `media/${trackId}/${audioFileName}`, // Use the correct key
-  };
-  try {
-    const data = await s3.headObject(params).promise();
-    return data.Metadata || {};
-  } catch (error) {
-    console.error("Error retrieving metadata:", error);
-    return {};
-  }
-}; */
-
 const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   /* States */
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTrack, setCurrentTrack] = useState<string | null>(null);
+  const [currentTrack, setCurrentTrack] = useState<TrackType | null>(null);
   const [trackDurations, setTrackDurations] = useState<Record<string, number>>(
     {}
   );
@@ -74,8 +43,6 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         return key.endsWith(".mp3") || key.endsWith(".wav");
       });
 
-      console.log("Audio files:", audioFiles);
-
       const trackPromises = audioFiles.map(async (item) => {
         const fileKey = item.key || "";
         const trackId = fileKey.split("/")[1];
@@ -85,22 +52,17 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
           Key: "public/" + fileKey,
         });
         const metadataResponse = await s3Client.send(headObjectCommand);
-        console.log("Metadata response for file:", fileKey, metadataResponse);
 
         const metadata = metadataResponse.Metadata;
         const title = metadata ? metadata["title"] : "";
-        const artist = metadata ? metadata["artist-name"] : "";
+        const artistSubId = metadata ? metadata["artist-sub-id"] : "";
         const color = metadata ? metadata["color"] : "";
-
-        /* console.log("title:", title);
-        console.log("artist:", artist);
-        console.log("color:", color); */
 
         const fileUrl = await Storage.get(fileKey);
 
         return {
           title: title,
-          artist: artist,
+          artistSubId: artistSubId,
           source: fileUrl as string,
           color: color,
           trackId: trackId,
@@ -108,7 +70,6 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
       });
 
       const trackList = await Promise.all(trackPromises);
-      console.log("Track list:", trackList);
       setTracks(trackList);
     } catch (error) {
       console.error("Failed to fetch tracks:", error);
@@ -122,29 +83,32 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   // Update the audio element's source when the current track changes
   useEffect(() => {
     if (audioRef.current && currentTrack) {
-      audioRef.current.src = currentTrack;
+      audioRef.current.src = currentTrack.source;
     }
   }, [currentTrack]);
 
   useEffect(() => {
     if (audioRef.current && currentTrack) {
-      audioRef.current.src = currentTrack;
+      audioRef.current.src = currentTrack.source;
       audioRef.current.onloadedmetadata = () => {
         setTrackDurations((prevDurations) => ({
           ...prevDurations,
-          [currentTrack]: audioRef.current!.duration,
+          [currentTrack.source]: audioRef.current!.duration,
         }));
       };
     }
   }, [currentTrack]);
 
-  /* Play/Pause Function */
   const handlePlayPause = (trackSource: string) => {
-    // Get the audio element from the ref
+    console.log("handlePlayPause called:", trackSource);
     const audioElement = audioRef.current;
     if (!audioElement) return;
 
-    if (currentTrack === trackSource) {
+    // Find the track object that matches the trackSource
+    const selectedTrack = tracks.find((track) => track.source === trackSource);
+
+    // If the selected track is the current track, toggle between play and pause
+    if (currentTrack && selectedTrack && currentTrack.source === trackSource) {
       if (audioElement.paused) {
         audioElement.play().catch((error) => {
           console.error("Error playing audio:", error);
@@ -155,28 +119,31 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         setIsPlaying(false);
       }
     } else {
-      // Pause the current audio
-      audioElement.pause();
-      // Set the new source
-      audioElement.src = trackSource;
-      // Update the current track
-      setCurrentTrack(trackSource);
-      // Set isPlaying to true
-      setIsPlaying(true);
-      // Add an event listener for the canplaythrough event
-      const handleCanPlayThrough = () => {
-        audioElement.play().catch((error) => {
-          console.error("Error playing audio:", error);
-        });
-        // Remove the event listener after playback starts
-        audioElement.removeEventListener(
-          "canplaythrough",
-          handleCanPlayThrough
-        );
-      };
-      audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
-      // Load the new audio source
-      audioElement.load();
+      // If a different track is selected, switch to the new track
+      if (selectedTrack) {
+        // Pause the current audio
+        audioElement.pause();
+        // Set the new source
+        audioElement.src = selectedTrack.source;
+        // Update the current track
+        setCurrentTrack(selectedTrack);
+        // Set isPlaying to true
+        setIsPlaying(true);
+        // Add an event listener for the loadedmetadata event
+        const handleLoadedMetadata = () => {
+          audioElement.play().catch((error) => {
+            console.error("Error playing audio:", error);
+          });
+          // Remove the event listener after playback starts
+          audioElement.removeEventListener(
+            "loadedmetadata",
+            handleLoadedMetadata
+          );
+        };
+        audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+        // Load the new audio source
+        audioElement.load();
+      }
     }
   };
 
@@ -194,7 +161,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
       }}
     >
       {children}
-      <audio ref={audioRef} />
+      <audio ref={audioRef} preload="auto" />
     </MediaContext.Provider>
   );
 };

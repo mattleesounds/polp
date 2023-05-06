@@ -19,15 +19,15 @@ const SignIn = () => {
         onClick={() => Auth.federatedSignIn()}
         className="mb-8 h-16 w-32 rounded-lg bg-[#010101] text-[#FDFDFD]"
       >
-        sign in with email
+        sign in
       </button>
-      <br />
+      {/* <br />
       <button
         onClick={handleGoogleSignIn}
         className="mb-8 h-16 w-32 rounded-lg bg-[#010101] text-[#FDFDFD]"
       >
         sign in with google
-      </button>
+      </button> */}
     </div>
   );
 };

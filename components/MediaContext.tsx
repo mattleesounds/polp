@@ -1,7 +1,7 @@
 import React from "react";
 export interface TrackType {
   title: string; // The title of the track
-  artist: string; // The name of the artist
+  artistSubId: string; // The name of the artist
   source: string; // The source URL or path of the audio ile
   trackId: string; // The ID of the track
   color: string; // The color of the track
@@ -10,8 +10,8 @@ export interface TrackType {
 const MediaContext = React.createContext<{
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
-  currentTrack: string | null;
-  setCurrentTrack: (track: string | null) => void;
+  currentTrack: TrackType | null;
+  setCurrentTrack: (track: TrackType | null) => void;
   handlePlayPause: (trackSource: string) => void;
   tracks: TrackType[];
   trackDurations: { [trackSource: string]: number };
