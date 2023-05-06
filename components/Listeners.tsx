@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { Auth, Storage } from "aws-amplify";
+import ControlBar from "./ControlBar";
 
 type Listener = {
   name: string | undefined;
@@ -29,47 +30,41 @@ const ListenersPage = () => {
         console.log("Artist sub:", artistSub);
 
         const collectorsPath = `collectors/${artistSub}/`;
-        const collectorsResult = (await Storage.list(
-          collectorsPath
-        )) as any as S3Object[];
-
+        const collectorsResult = (await Storage.list(collectorsPath)) as any;
         console.log("Collectors result:", collectorsResult);
 
-        // Ensure that collectors is an array
-        const collectors = Array.isArray(collectorsResult)
-          ? collectorsResult
-          : [collectorsResult];
+        // Access the 'results' property to get the array of collectors
+        const collectors = collectorsResult.results;
 
         const userDetailsList: Listener[] = [];
         for (const collector of collectors) {
-          // Ensure that collector.key is defined before using split
-          if (collector.key) {
-            const userSub = collector.key.split("/")[1];
-            console.log("User sub:", userSub);
+          console.log("Collector:", collector); // Log the collector object
+          // Extract the listener's sub from the third part of the key
+          const userSub = collector.key.split("/")[2];
+          console.log("User sub:", userSub); // Log the extracted user sub
 
-            // Use listUsers with a filter to find the user by sub
-            const params = {
-              UserPoolId: "YOUR_COGNITO_USER_POOL_ID",
-              Filter: `sub = "${userSub}"`,
-            };
-            const usersResponse = await cognito.listUsers(params).promise();
-            console.log("Users response:", usersResponse);
+          // Use listUsers with a filter to find the user by sub
+          const params = {
+            UserPoolId: "YOUR_COGNITO_USER_POOL_ID",
+            Filter: `sub = "${userSub}"`,
+          };
+          const usersResponse = await cognito.listUsers(params).promise();
+          console.log("Users response:", usersResponse); // Log the users response
 
-            const user = usersResponse.Users?.[0]; // Get the first user from the response
+          const user = usersResponse.Users?.[0]; // Get the first user from the response
 
-            if (user) {
-              const nameAttr = user.Attributes?.find(
-                (attr) => attr.Name === "name"
-              );
-              const emailAttr = user.Attributes?.find(
-                (attr) => attr.Name === "email"
-              );
-              userDetailsList.push({
-                name: nameAttr?.Value,
-                email: emailAttr?.Value,
-                sub: userSub,
-              });
-            }
+          if (user) {
+            const nameAttr = user.Attributes?.find(
+              (attr) => attr.Name === "custom:Name"
+            );
+            const emailAttr = user.Attributes?.find(
+              (attr) => attr.Name === "email"
+            );
+            userDetailsList.push({
+              name: nameAttr?.Value,
+              email: emailAttr?.Value,
+              sub: userSub,
+            });
           }
         }
         console.log("User details list:", userDetailsList);
@@ -83,29 +78,42 @@ const ListenersPage = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Listeners</h1>
-      <table>
+    <div className="flex justify-center">
+      <table className="table-auto border-collapse border border-black">
         <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Profile</th>
+          <tr className=" bg-black text-white">
+            <th className="border border-black border-r-white px-4 py-2">
+              Name
+            </th>
+            <th className="border border-black border-r-white px-4 py-2">
+              Email
+            </th>
+            <th className="border border-black px-4 py-2">Profile</th>
           </tr>
         </thead>
         <tbody>
           {listeners.map((listener) => (
-            <tr key={listener.sub}>
-              <td>{listener.name || "Unknown"}</td>
-              <td>{listener.email || "Unknown"}</td>
-              <td>
+            <tr
+              key={listener.sub}
+              className="border border-black bg-polp-white"
+            >
+              <td className="border border-black px-4 py-2">
+                {listener.name || "Unknown"}
+              </td>
+              <td className="border border-black px-4 py-2">
+                {listener.email || "Unknown"}
+              </td>
+              <td className="border border-black px-4 py-2">
                 {/* Replace "#" with the actual link to the user's profile */}
-                <a href="#">View Profile</a>
+                <a href="#" className="text-blue-500 hover:underline">
+                  View Profile
+                </a>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <ControlBar />
     </div>
   );
 };
