@@ -27,43 +27,48 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   // Create an S3 client instance
 
   const fetchTracks = useCallback(async () => {
-    // Retrieve the current user's credentials from Amplify
-    const credentials = await Auth.currentCredentials();
-
-    // Create an S3 client using the AWS SDK v3
-    const s3Client = new S3Client({
-      region: "us-east-2", // Update this to your desired region
-      credentials: credentials,
-    });
+    console.log("fetchTracks function called");
 
     try {
+      console.log("Retrieving current user's credentials...");
+      const credentials = await Auth.currentCredentials();
+      console.log("Credentials retrieved:", credentials);
+
+      console.log("Creating S3 client...");
+      const s3Client = new S3Client({
+        region: "us-east-2", // Update this to your desired region
+        credentials: credentials,
+      });
+      console.log("S3 client created");
+
+      console.log("Listing files in 'media/'...");
       const listResult = await Storage.list("media/");
+      console.log("Files listed:", listResult);
+
       const audioFiles = listResult.results.filter((item) => {
         const key = item.key || "";
         return key.endsWith(".mp3") || key.endsWith(".wav");
       });
 
-      // const cloudFrontUrl = "https://d2pg44z08okzoj.cloudfront.net/"; // Replace with your CloudFront distribution URL
+      console.log("Audio files filtered:", audioFiles);
 
       const trackPromises = audioFiles.map(async (item) => {
         const fileKey = item.key || "";
         const trackId = fileKey.split("/")[1];
 
+        console.log("Getting metadata for file:", fileKey);
         const headObjectCommand = new HeadObjectCommand({
           Bucket: awsExports.aws_user_files_s3_bucket,
           Key: "public/" + fileKey,
         });
         const metadataResponse = await s3Client.send(headObjectCommand);
+        console.log("Metadata retrieved:", metadataResponse);
 
         const metadata = metadataResponse.Metadata;
         const title = metadata ? metadata["title"] : "";
         const artistSubId = metadata ? metadata["artist-sub-id"] : "";
         const color = metadata ? metadata["color"] : "";
 
-        // Remove the "/public/media" prefix from the fileKey
-        //const cloudFrontFileKey = fileKey.replace("/public/media", "");
-
-        // Construct the CloudFront URL using the cloudFrontFileKey
         const fileUrl = `https://d2pg44z08okzoj.cloudfront.net/${fileKey}`;
 
         return {
@@ -75,7 +80,11 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         };
       });
 
+      console.log("Track promises created:", trackPromises);
+
       const trackList = await Promise.all(trackPromises);
+      console.log("Track list created:", trackList);
+
       setTracks(trackList);
     } catch (error) {
       console.error("Failed to fetch tracks:", error);
