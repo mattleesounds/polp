@@ -4,6 +4,8 @@ import { Auth } from "aws-amplify";
 import ControlBar from "./ControlBar";
 import { v4 as uuidv4 } from "uuid"; // Import the uuidv4 function
 import { Select, Option } from "@material-tailwind/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const uploadFile = async (
   file: File,
@@ -52,7 +54,13 @@ const Upload = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
     if (selectedFile) {
-      setFile(selectedFile);
+      // Check if the selected file is an MP3 file
+      if (selectedFile.type === "audio/mp3") {
+        setFile(selectedFile);
+      } else {
+        // Show a toast notification if the file type is not MP3
+        toast.error("Audio files must be in .mp3 format");
+      }
     }
   };
 
@@ -62,8 +70,12 @@ const Upload = () => {
       setImage(selectedFile);
     }
   };
+
   const handleUpload = async () => {
     if (!file) return;
+
+    // Define the variable loadingToastId
+    let loadingToastId;
 
     try {
       // Ensure the user is signed in
@@ -97,6 +109,12 @@ const Upload = () => {
         trackId: trackId, // Add trackId to metadata
       };
 
+      // Show loading toast and assign the result to loadingToastId
+      loadingToastId = toast("Uploading...", {
+        type: "info",
+        autoClose: false,
+      });
+
       // Upload audio file with metadata
       const uploadedFileKey = await uploadFile(file, metadata, folderPath);
       console.log("File uploaded:", uploadedFileKey);
@@ -115,7 +133,22 @@ const Upload = () => {
         );
         console.log("Metadata uploaded:", uploadedMetadataKey);
       }
+
+      // Update loading toast to success
+      toast.update(loadingToastId, {
+        type: "success",
+        render: "Upload complete!",
+        autoClose: 3000,
+      });
     } catch (error) {
+      // Update loading toast to error, if loadingToastId is defined
+      if (loadingToastId !== undefined) {
+        toast.update(loadingToastId, {
+          type: "error",
+          render: "Upload failed!",
+          autoClose: 3000,
+        });
+      }
       if (error instanceof Error) {
         console.error("File or image upload failed:", error.message);
         console.error("Error details:", JSON.stringify(error, null, 2));
@@ -143,10 +176,10 @@ const Upload = () => {
         placeholder="Track description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="mb-4 w-72 p-1 "
+        className="mb-2 w-72 p-1 "
       />
       <br />
-      <h2 className="text-lg text-polp-black">audio file</h2>
+      <h2 className="text-lg text-polp-black">audio file(.mp3 only)</h2>
       <input
         type="file"
         accept="audio/*"
@@ -159,12 +192,12 @@ const Upload = () => {
         type="file"
         accept="image/*"
         onChange={handleImageChange}
-        className="mb-8 bg-white"
+        className="mb-4 bg-white"
       />
       <br />
       <div className="flex justify-center">
         <div className="w-72">
-          <h2 className="text-lg text-polp-black">select vibe</h2>
+          <h2 className="mt-0 text-lg text-polp-black">select vibe</h2>
           <Select
             value={color}
             onChange={(selectedColor) => {
@@ -189,7 +222,7 @@ const Upload = () => {
       <br />
       <button
         onClick={handleUpload}
-        className="h-8 w-32 rounded-lg bg-polp-black text-white"
+        className="mb-24 h-12 w-48 rounded-lg bg-polp-black text-white"
       >
         upload track
       </button>

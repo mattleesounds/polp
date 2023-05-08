@@ -43,6 +43,8 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         return key.endsWith(".mp3") || key.endsWith(".wav");
       });
 
+      // const cloudFrontUrl = "https://d2pg44z08okzoj.cloudfront.net/"; // Replace with your CloudFront distribution URL
+
       const trackPromises = audioFiles.map(async (item) => {
         const fileKey = item.key || "";
         const trackId = fileKey.split("/")[1];
@@ -58,12 +60,16 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         const artistSubId = metadata ? metadata["artist-sub-id"] : "";
         const color = metadata ? metadata["color"] : "";
 
-        const fileUrl = await Storage.get(fileKey);
+        // Remove the "/public/media" prefix from the fileKey
+        //const cloudFrontFileKey = fileKey.replace("/public/media", "");
+
+        // Construct the CloudFront URL using the cloudFrontFileKey
+        const fileUrl = `https://d2pg44z08okzoj.cloudfront.net/${fileKey}`;
 
         return {
           title: title,
           artistSubId: artistSubId,
-          source: fileUrl as string,
+          source: fileUrl,
           color: color,
           trackId: trackId,
         };
@@ -74,7 +80,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     } catch (error) {
       console.error("Failed to fetch tracks:", error);
     }
-  }, []); // Define any dependencies for fetchTracks here
+  }, []);
 
   useEffect(() => {
     fetchTracks();
@@ -106,6 +112,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
 
     // Find the track object that matches the trackSource
     const selectedTrack = tracks.find((track) => track.source === trackSource);
+    console.log("Audio source URL:", selectedTrack?.source);
 
     // If the selected track is the current track, toggle between play and pause
     if (currentTrack && selectedTrack && currentTrack.source === trackSource) {
