@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import SignIn from "@/components/SignIn";
 import MediaProvider from "@/components/MediaProvider";
+import { ToastContainer } from "react-toastify";
 
 //Logger.LOG_LEVEL = "DEBUG";
 
@@ -44,6 +45,7 @@ function App({ Component, pageProps }: AppProps) {
       <Authenticator loginMechanisms={["email"]}>
         <Component {...pageProps} />
       </Authenticator>
+      <ToastContainer />
     </MediaProvider>
   );
 }
