@@ -5,6 +5,7 @@ export interface TrackType {
   source: string; // The source URL or path of the audio ile
   trackId: string; // The ID of the track
   color: string; // The color of the track
+  timestamp: string; // The timestamp of the track
 }
 
 const MediaContext = React.createContext<{
