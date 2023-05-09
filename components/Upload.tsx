@@ -53,9 +53,11 @@ const Upload = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
+
     if (selectedFile) {
+      console.log("Selected file type:", selectedFile.type);
       // Check if the selected file is an MP3 file
-      if (selectedFile.type === "audio/mp3") {
+      if (selectedFile.type === "audio/mpeg") {
         setFile(selectedFile);
       } else {
         // Show a toast notification if the file type is not MP3
@@ -107,7 +109,10 @@ const Upload = () => {
         "artist-sub-id": currentUser.attributes.sub,
         color: color, // Add color to metadata
         trackId: trackId, // Add trackId to metadata
+        timestamp: new Date().toISOString(), // Add timestamp to metadata
       };
+
+      console.log("timestamp:", metadata.timestamp);
 
       // Show loading toast and assign the result to loadingToastId
       loadingToastId = toast("Uploading...", {
