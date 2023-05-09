@@ -30,39 +30,29 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     console.log("fetchTracks function called");
 
     try {
-      console.log("Retrieving current user's credentials...");
       const credentials = await Auth.currentCredentials();
-      console.log("Credentials retrieved:", credentials);
 
-      console.log("Creating S3 client...");
       const s3Client = new S3Client({
         region: "us-east-2", // Update this to your desired region
         credentials: credentials,
       });
-      console.log("S3 client created");
 
-      console.log("Listing files in 'media/'...");
       const listResult = await Storage.list("media/");
-      console.log("Files listed:", listResult);
 
       const audioFiles = listResult.results.filter((item) => {
         const key = item.key || "";
         return key.endsWith(".mp3") || key.endsWith(".wav");
       });
 
-      console.log("Audio files filtered:", audioFiles);
-
       const trackPromises = audioFiles.map(async (item) => {
         const fileKey = item.key || "";
         const trackId = fileKey.split("/")[1];
 
-        console.log("Getting metadata for file:", fileKey);
         const headObjectCommand = new HeadObjectCommand({
           Bucket: awsExports.aws_user_files_s3_bucket,
           Key: "public/" + fileKey,
         });
         const metadataResponse = await s3Client.send(headObjectCommand);
-        console.log("Metadata retrieved:", metadataResponse);
 
         const metadata = metadataResponse.Metadata;
         const title = metadata ? metadata["title"] : "";
@@ -80,11 +70,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         };
       });
 
-      console.log("Track promises created:", trackPromises);
-
       const trackList = await Promise.all(trackPromises);
-      console.log("Track list created:", trackList);
-
       setTracks(trackList);
     } catch (error) {
       console.error("Failed to fetch tracks:", error);
@@ -115,13 +101,11 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
   }, [currentTrack]);
 
   const handlePlayPause = (trackSource: string) => {
-    console.log("handlePlayPause called:", trackSource);
     const audioElement = audioRef.current;
     if (!audioElement) return;
 
     // Find the track object that matches the trackSource
     const selectedTrack = tracks.find((track) => track.source === trackSource);
-    console.log("Audio source URL:", selectedTrack?.source);
 
     // If the selected track is the current track, toggle between play and pause
     if (currentTrack && selectedTrack && currentTrack.source === trackSource) {
