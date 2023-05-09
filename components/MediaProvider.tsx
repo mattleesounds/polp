@@ -60,8 +60,6 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
         const artistSubId = metadata ? metadata["artist-sub-id"] : "";
         const color = metadata ? metadata["color"] : "";
         const timestamp = metadata ? metadata["timestamp"] : "";
-        console.log("Retrieved timestamp:", timestamp);
-        console.log("Retrieved metadata:", metadataResponse.Metadata);
 
         // Remove the "/public/media" prefix from the fileKey
         //const cloudFrontFileKey = fileKey.replace("/public/media", "");
@@ -95,7 +93,6 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
       });
 
       setTracks(trackList);
-      console.log("Sorted track list:", trackList);
     } catch (error) {
       console.error("Failed to fetch tracks:", error);
     }
