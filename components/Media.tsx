@@ -98,7 +98,7 @@ const Media = (): JSX.Element => {
           </div>
 
           {/* search bar */}
-          <div className="w-half absolute top-1/2 left-1/2 z-20 h-full -translate-x-1/2 -translate-y-1/2 transform items-center md:w-[50%]">
+          <div className="absolute top-1/2 left-1/2 z-20 h-full w-[40%] -translate-x-1/2 -translate-y-1/2 transform items-center md:w-[50%]">
             <input
               className="w-full translate-y-5 bg-polp-grey p-1"
               placeholder="App coming soon...!"

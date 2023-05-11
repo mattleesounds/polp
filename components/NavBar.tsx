@@ -34,7 +34,7 @@ const NavBar = ({ handleProfile, handleFeed, handleCmt }: props) => {
         {/* search bar */}
         <div className="relative z-10 m-12 p-2">
           <input
-            className="m-12 w-full bg-polp-grey p-2"
+            className="m-12 w-[80%] bg-polp-grey p-2"
             placeholder="App coming soon...!"
           />
         </div>
