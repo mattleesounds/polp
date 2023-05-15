@@ -25,14 +25,14 @@ const Feed = ({ handleProfile }: FeedProps): JSX.Element => {
           signup for the waitlist
         </a>
         <p>
-          If you are an artist, please contact Matt Lee directly through Twitter
-          or email.
+          If you are an artist, please contact Matt Lee directly through social
+          media or email.
         </p>
         <div
           /*         href="https://bsb2oht0phj.typeform.com/to/QFNUiYOa" */
           className="m-6 mb-0 flex h-[200px] w-[90%] max-w-[1240px] content-center items-center justify-center rounded-lg border-2 border-[#010101] bg-polp-black p-4 text-center text-lg text-white"
         >
-          Twitter: @matt_p_lee <br />
+          Socials: @matt_p_lee <br />
           Email: matt@polp.app
         </div>
       </div>
