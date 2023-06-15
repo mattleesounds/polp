@@ -3,7 +3,6 @@ import Upload from "@/components/Upload";
 import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
 import ControlBar from "@/components/ControlBar";
-import TrackMetadata from "@/components/TrackMetadata";
 
 const uploadPage = () => {
   return (
