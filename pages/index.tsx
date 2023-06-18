@@ -8,11 +8,26 @@ import MediaContext from "@/components/MediaContext";
 import { useContext } from "react";
 import Feed from "@/components/Feed";
 import ControlBar from "@/components/ControlBar";
+import { Auth } from "aws-amplify";
+import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    Auth.currentAuthenticatedUser()
+      .then((user) => {
+        setUser(user);
+        setIsAuthenticated(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsAuthenticated(false);
+      });
+  }, []);
 
   return (
     <>
