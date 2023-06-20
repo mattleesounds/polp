@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineUpload } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
 import { useState } from "react";
-import { Auth } from "aws-amplify";
+/* import { Auth } from "aws-amplify"; */
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +13,7 @@ const NavBar = () => {
     setIsOpen(!isOpen);
   }
 
-  const handleSignOut = async () => {
+  /* const handleSignOut = async () => {
     try {
       console.log("Attempting to sign out...");
       await Auth.signOut({ global: true });
@@ -21,7 +21,7 @@ const NavBar = () => {
     } catch (error) {
       console.error("Error signing out:", error);
     }
-  };
+  }; */
 
   return (
     <div className="fixed top-0 z-10 h-16 max-h-16 w-full bg-white">
@@ -64,9 +64,9 @@ const NavBar = () => {
                 <Link href="/uploadPage">
                   <li className="p-2 hover:bg-polp-grey">upload music</li>
                 </Link>
-                <button onClick={handleSignOut}>
+                {/* <button onClick={handleSignOut}>
                   <li className="p-2 hover:bg-polp-grey">sign out</li>
-                </button>
+                </button> */}
               </ul>
             </div>
           )}

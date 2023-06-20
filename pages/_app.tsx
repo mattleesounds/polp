@@ -12,7 +12,7 @@ import SignIn from "@/components/SignIn";
 import MediaProvider from "@/components/MediaProvider";
 import { ToastContainer } from "react-toastify";
 
-Logger.LOG_LEVEL = "DEBUG";
+//Logger.LOG_LEVEL = "DEBUG";
 
 Amplify.configure(awsExports);
 Auth.configure(awsExports);
@@ -20,15 +20,6 @@ Storage.configure(awsExports);
 
 console.log("Redirect Sign In:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_IN);
 console.log("Redirect Sign Out:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_OUT);
-
-Amplify.configure(awsExports);
-Auth.configure(awsExports);
-Storage.configure(awsExports);
-
-console.log("Redirect Sign In:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_IN);
-console.log("Redirect Sign Out:", process.env.NEXT_PUBLIC_REDIRECT_SIGN_OUT);
-
-import { withAuthenticator } from "@aws-amplify/ui-react";
 
 function App({ Component, pageProps }: AppProps) {
   const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
@@ -45,17 +36,10 @@ function App({ Component, pageProps }: AppProps) {
     return <div>Loading...</div>;
   }
 
-  // If the user is not signed in, render the main app without authenticator
+  // If the user is not signed in, render the sign-in page
   if (!isSignedIn) {
-    return (
-      <MediaProvider>
-        <Component {...pageProps} />
-        <ToastContainer />
-      </MediaProvider>
-    );
+    return <SignIn />;
   }
-
-  // If the user is signed in, render the main app with sign out option
   return (
     <MediaProvider>
       <Authenticator loginMechanisms={["email"]}>
@@ -67,3 +51,4 @@ function App({ Component, pageProps }: AppProps) {
 }
 
 export default App;
+/* export default withAuthenticator(App); */

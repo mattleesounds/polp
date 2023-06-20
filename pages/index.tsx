@@ -1,20 +1,20 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
 import NavBar from "@/components/NavBar";
-import PageTitle from "@/components/PageTitle";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+/* import PageTitle from "@/components/PageTitle"; */
+/* import { useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import MediaContext from "@/components/MediaContext";
 import { useContext } from "react";
 import Feed from "@/components/Feed";
 import ControlBar from "@/components/ControlBar";
 import { Auth } from "aws-amplify";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; */
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [user, setUser] = useState(null);
+  /* const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Home() {
         console.log(err);
         setIsAuthenticated(false);
       });
-  }, []);
+  }, []); */
 
   return (
     <>
@@ -39,9 +39,9 @@ export default function Home() {
       </Head>
       <main className="h-screen bg-polp-grey">
         <NavBar />
-        <PageTitle />
-        <Feed />
-        <ControlBar />
+        {/* <PageTitle /> */}
+        {/* <Feed /> */}
+        {/* <ControlBar /> */}
       </main>
     </>
   );
