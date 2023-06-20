@@ -6,7 +6,11 @@ import MediaContext from "./MediaContext";
 import { v4 as uuidv4 } from "uuid";
 import AWS from "aws-sdk";
 import awsExports from "../src/aws-exports.js";
-import { S3Client, HeadObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  GetObjectCommand,
+  GetObjectOutput,
+} from "@aws-sdk/client-s3";
 import { TrackType } from "./MediaContext";
 
 interface MediaProviderProps {
@@ -24,7 +28,25 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Create an S3 client instance
+  async function streamToString(
+    stream: ReadableStream<Uint8Array>
+  ): Promise<string> {
+    let result = "";
+    const reader = stream.getReader();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      result += new TextDecoder("utf-8").decode(value);
+    }
+    return result;
+  }
+
+  interface StorageObject {
+    key: string;
+    eTag?: string;
+    lastModified?: string;
+    size?: number;
+  }
 
   const fetchTracks = useCallback(async () => {
     // Retrieve the current user's credentials from Amplify
@@ -37,34 +59,39 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     });
 
     try {
-      const listResult = await Storage.list("media/");
-      const audioFiles = listResult.results.filter((item) => {
+      // List all files under 'public/media/' directory
+      const listResult = await Storage.list("public/media/");
+
+      const audioFiles = listResult.items.filter((item) => {
         const key = item.key || "";
         return key.endsWith(".mp3") || key.endsWith(".wav");
       });
 
-      // const cloudFrontUrl = "https://d2pg44z08okzoj.cloudfront.net/"; // Replace with your CloudFront distribution URL
-
-      const trackPromises = audioFiles.map(async (item) => {
+      const trackPromises = audioFiles.map(async (item: StorageObject) => {
         const fileKey = item.key || "";
-        const trackId = fileKey.split("/")[1];
+        const trackId = fileKey.split("/")[2];
 
-        const headObjectCommand = new HeadObjectCommand({
+        // Change the key to fetch metadata from the track's directory
+        const metadataKey = `public/media/${trackId}/metadata.json`;
+        const getObjectCommand = new GetObjectCommand({
           Bucket: awsExports.aws_user_files_s3_bucket,
-          Key: "public/" + fileKey,
+          Key: metadataKey,
         });
-        const metadataResponse = await s3Client.send(headObjectCommand);
+        const metadataResponse = await s3Client.send(getObjectCommand);
 
-        const metadata = metadataResponse.Metadata;
+        // Parse the metadata from the response
+        const metadataString = await streamToString(
+          (metadataResponse as GetObjectOutput)
+            .Body as ReadableStream<Uint8Array>
+        );
+
+        const metadata = JSON.parse(metadataString);
         const title = metadata ? metadata["title"] : "";
         const artistSubId = metadata ? metadata["artist-sub-id"] : "";
         const color = metadata ? metadata["color"] : "";
         const timestamp = metadata ? metadata["timestamp"] : "";
 
-        // Remove the "/public/media" prefix from the fileKey
-        //const cloudFrontFileKey = fileKey.replace("/public/media", "");
-
-        // Construct the CloudFront URL using the cloudFrontFileKey
+        // Construct the CloudFront URL using the fileKey
         const fileUrl = `https://d2pg44z08okzoj.cloudfront.net/${fileKey}`;
 
         return {
@@ -78,7 +105,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
       });
 
       const trackList = await Promise.all(trackPromises);
-      trackList.sort((a, b) => {
+      trackList.sort((a: any, b: any) => {
         if (a.timestamp && b.timestamp) {
           return (
             new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
