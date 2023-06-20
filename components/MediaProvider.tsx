@@ -62,7 +62,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
       // List all files under 'public/media/' directory
       const listResult = await Storage.list("public/media/");
 
-      const audioFiles = listResult.items.filter((item) => {
+      const audioFiles = listResult.results.filter((item: { key: string }) => {
         const key = item.key || "";
         return key.endsWith(".mp3") || key.endsWith(".wav");
       });
