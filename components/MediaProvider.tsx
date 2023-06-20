@@ -50,7 +50,8 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
     });
 
     try {
-      const listResult = await Storage.list("public/media/");
+      const listResult = await Storage.list("media/");
+      console.log("listResult:", listResult.results);
 
       const audioFiles: S3ProviderListOutputItem[] = listResult.results.filter(
         (item: S3ProviderListOutputItem) => {
@@ -106,6 +107,7 @@ const MediaProvider = ({ children }: MediaProviderProps): JSX.Element => {
           return 0;
         }
       });
+      console.log("trackList:", trackList);
 
       setTracks(trackList);
     } catch (error) {
