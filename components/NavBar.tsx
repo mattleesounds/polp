@@ -13,16 +13,6 @@ const NavBar = () => {
     setIsOpen(!isOpen);
   }
 
-  const handleSignOut = async () => {
-    try {
-      console.log("Attempting to sign out...");
-      await Auth.signOut({ global: true });
-      console.log("Sign out successful.");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
   return (
     <div className="fixed top-0 z-10 h-16 max-h-16 w-full bg-white">
       <div className="m-auto flex h-full max-w-[1240px] items-center justify-between">
@@ -64,9 +54,9 @@ const NavBar = () => {
                 <Link href="/uploadPage">
                   <li className="p-2 hover:bg-polp-grey">upload music</li>
                 </Link>
-                <button onClick={handleSignOut}>
+                {/*  <button onClick={handleSignOut}>
                   <li className="p-2 hover:bg-polp-grey">sign out</li>
-                </button>
+                </button> */}
               </ul>
             </div>
           )}

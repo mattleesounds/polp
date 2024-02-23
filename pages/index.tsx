@@ -2,7 +2,6 @@ import Head from "next/head";
 import { Inter } from "@next/font/google";
 import NavBar from "@/components/NavBar";
 import PageTitle from "@/components/PageTitle";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import MediaContext from "@/components/MediaContext";
 import { useContext } from "react";
@@ -12,8 +11,6 @@ import ControlBar from "@/components/ControlBar";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
-
   return (
     <>
       <Head>
