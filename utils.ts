@@ -17,7 +17,7 @@ export const getArtistNameBySubId = async (subId: string) => {
 
     // Define the parameters for the listUsers method
     const params = {
-      UserPoolId: 'YOUR_COGNITO_USER_POOL_ID',
+      UserPoolId: process.env.NEXT_PUBLIC_AWS_USER_POOLS_ID,
       Filter: `sub = "${subId}"`, // Filter users based on the sub attribute
     };
 

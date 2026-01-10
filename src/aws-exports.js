@@ -8,12 +8,12 @@ const awsmobile = {
     "aws_user_pools_id": process.env.NEXT_PUBLIC_AWS_USER_POOLS_ID,
     "aws_user_pools_web_client_id": process.env.NEXT_PUBLIC_AWS_USER_POOLS_WEB_CLIENT_ID,
     "oauth": {
-        "domain": "YOUR_COGNITO_DOMAIN.auth.us-east-2.amazoncognito.com",
+        "domain": process.env.NEXT_PUBLIC_COGNITO_OAUTH_DOMAIN,
         "scope": ["email", "openid", "profile","aws.cognito.signin.user.admin"],
         "redirectSignIn": process.env.NEXT_PUBLIC_REDIRECT_SIGN_IN,
         "redirectSignOut": process.env.NEXT_PUBLIC_REDIRECT_SIGN_OUT,
         "responseType": 'code', // or 'token'
-        "googleClientId": "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+        "googleClientId": process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
       },
     "aws_cognito_username_attributes": [
         "EMAIL"

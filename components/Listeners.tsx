@@ -45,7 +45,7 @@ const ListenersPage = () => {
 
           // Use listUsers with a filter to find the user by sub
           const params = {
-            UserPoolId: "YOUR_COGNITO_USER_POOL_ID",
+            UserPoolId: process.env.NEXT_PUBLIC_AWS_USER_POOLS_ID,
             Filter: `sub = "${userSub}"`,
           };
           const usersResponse = await cognito.listUsers(params).promise();

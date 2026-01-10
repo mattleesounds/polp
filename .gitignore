@@ -56,3 +56,6 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+# Amplify team provider info (contains environment-specific AWS resource IDs)
+amplify/team-provider-info.json
